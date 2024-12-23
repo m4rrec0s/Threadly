@@ -1,7 +1,13 @@
-export interface Post {
+import { Like } from "./Likes";
+import { Comment } from "./Comments";
+import { User } from "./Users";
+
+export type Post = {
   id: string;
-  content: string;
   image_url: string;
-  author_id: string;
+  content: string;
   created_at: string;
-}
+  likes: Array<Like>;
+  comments: Array<Comment>;
+  user: Pick<User, "id" | "name" | "image" | "username">;
+};
