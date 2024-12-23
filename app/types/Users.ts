@@ -1,8 +1,10 @@
-export interface User {
+import { Post } from "./Posts";
+
+export type User = {
   id: string;
-  name: string;
   username: string;
-  image: string;
   email: string;
-  created_at: string;
-}
+  name: string;
+  image: string;
+  posts: Post[];
+};
