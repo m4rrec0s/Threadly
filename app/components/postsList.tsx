@@ -5,7 +5,7 @@ import axiosClient from "../services/axiosClient";
 import Image from "next/image";
 import { dateConvert } from "../helpers/dateConvert";
 import { Button } from "./ui/button";
-import { HeartIcon, MessageCircle, Send } from "lucide-react";
+import { HeartIcon, MessageCircle, Send, SendIcon } from "lucide-react";
 import { User } from "../types/Users";
 import { Post } from "../types/Posts";
 import { Skeleton } from "./ui/skeleton";
@@ -17,6 +17,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
+import { Input } from "./ui/input";
 
 const PostsList = () => {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -57,10 +58,6 @@ const PostsList = () => {
     }
   };
 
-  // const findUserById = (id: string | number) => {
-  //   return users?.find((user) => user.id === id);
-  // };
-
   if (loading) {
     return (
       <section className="flex-grow">
@@ -75,7 +72,7 @@ const PostsList = () => {
                 <Skeleton className="h-[500px] w-[500px]" />
 
                 <div className="mt-6 space-y-3">
-                  <Skeleton className="h-5 w-[]" />
+                  <Skeleton className="h-5 w-96" />
                   <Skeleton className="h-5 w-80" />
                 </div>
               </div>
@@ -200,7 +197,8 @@ const PostsList = () => {
                         Curtidas
                       </DialogTitle>
                     </DialogHeader>
-                    <div className="border-t border-gray-600 flex flex-col space-y-3">
+                    <div className="border-t border-gray-600"></div>
+                    <div className="flex flex-col space-y-3">
                       {loading ? (
                         <div>Loading likes...</div>
                       ) : post.likes ? (
@@ -211,7 +209,7 @@ const PostsList = () => {
                           return (
                             <div
                               key={like.id}
-                              className="flex items-center space-x-2"
+                              className="flex items-center space-x-3 py-2 hover:bg-white/10 transition-all rounded-lg"
                             >
                               <Image
                                 src={`${user?.image}?random=${like.user_id}`}
@@ -254,7 +252,7 @@ const PostsList = () => {
                         Ver todos os {post.comments.length} comentários
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="text-sm">
+                    <DialogContent className="text-sm flex-grow">
                       <DialogHeader className="hidden">
                         <DialogTitle>Comentários</DialogTitle>
                         <DialogDescription>
@@ -326,9 +324,32 @@ const PostsList = () => {
                           </h3>
                         </div>
                       )}
+
+                      <form className="mt-3 flex gap-3 items-center">
+                        <Input
+                          type="text"
+                          placeholder="Adicione um comentário..."
+                          className=""
+                        />
+                        <Button className="text-sm px-2 font-semibold">
+                          <SendIcon className="!w-5 !h-5" />
+                        </Button>
+                      </form>
                     </DialogContent>
                   </Dialog>
                 ) : null}
+                <div>
+                  <div className="mt-3 flex gap-3 items-center">
+                    <Input
+                      type="text"
+                      placeholder="Adicione um comentário..."
+                      className=""
+                    />
+                    <Button className="text-sm px-2 font-semibold">
+                      <SendIcon className="!w-5 !h-5" />
+                    </Button>
+                  </div>
+                </div>
                 <div className="border-b border-gray-600 py-2"></div>
               </div>
             </div>
