@@ -6,7 +6,7 @@ export async function signInRequest(data: { email: string; password: string }) {
 }
 
 export async function recoverUserInformation(token: string) {
-  const response = await axios.get("http://localhost:8080/me", {
+  const response = await axios.get("http://localhost:8080/login", {
     headers: {
       Authorization: `Bearer ${token}`,
     },

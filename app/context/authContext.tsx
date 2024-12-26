@@ -1,3 +1,5 @@
+"use client";
+
 import {
   createContext,
   useCallback,
@@ -5,12 +7,10 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { setCookie, parseCookies, destroyCookie } from "nookies";
 import axiosClient from "../services/axiosClient";
-
 import { signInRequest } from "../services/auth";
-// import { api } from "../services/api";
 import { Post } from "../types/Posts";
 
 type User = {
@@ -25,10 +25,6 @@ type User = {
 type SignInData = {
   email: string;
   password: string;
-  image: string;
-  name: string;
-  posts: Post[];
-  username: string;
 };
 
 type AuthContextType = {
@@ -38,10 +34,11 @@ type AuthContextType = {
   signOut: () => void;
 };
 
-const AuthContext = createContext({} as AuthContextType);
+export const AuthContext = createContext({} as AuthContextType);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const isAuthenticated = !!user;
   const router = useRouter();
 
@@ -62,13 +59,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [signOut]);
 
-  async function signIn({
-    email,
-    password,
-  }: {
-    email: string;
-    password: string;
-  }) {
+  async function signIn({ email, password }: SignInData) {
     try {
       const { token, user } = await signInRequest({ email, password });
 
@@ -79,8 +70,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       router.push("/");
     } catch (error) {
       console.error("Erro ao fazer login:", error);
-      // Adicionar feedback visual ao usuário
+      setError(`Erro: ${error}`);
     }
+  }
+
+  if (error) {
+    return <p>{error}</p>;
   }
 
   return (
