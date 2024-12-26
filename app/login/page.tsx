@@ -1,44 +1,49 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { LockIcon } from "lucide-react";
+import { useState } from "react";
 import { useAuth } from "../context/authContext";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 
-type FormData = {
-  email: string;
-  password: string;
-};
-
 export default function LoginPage() {
-  const { register, handleSubmit } = useForm<FormData>();
-  const { signIn } = useAuth();
+  const { login } = useAuth();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
 
-  async function handleSignIn(data: FormData) {
-    await signIn(data);
-  }
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    login(name, email);
+  };
 
   return (
-    <div className="flex flex-col justify-center items-center h-screen">
-      <h1 className="text-4xl font-extrabold">Bem vindo!</h1>
-      <div className="mt-6">
-        <form
-          onSubmit={handleSubmit(handleSignIn)}
-          className="flex flex-col gap-3 min-w-[500px]"
-        >
-          <Input type="email" placeholder="Email" {...register("email")} />
+    <div className="flex items-center justify-center h-screen px-5">
+      <form
+        onSubmit={handleSubmit}
+        className="p-8 rounded shadow-md w-full max-w-md"
+      >
+        <h3>Faça seu login</h3>
+        <div className="mb-4">
+          <label className="block mb-2 text-sm">Nome</label>
           <Input
-            type="password"
-            placeholder="Password"
-            {...register("password")}
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
           />
-          <Button type="submit">
-            <LockIcon size={24} />
-            Sign In
-          </Button>
-        </form>
-      </div>
+        </div>
+        <div className="mb-4">
+          <label className="block mb-2 text-sm">Email</label>
+          <Input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <span>
+          <Button type="submit">Entrar</Button>
+        </span>
+      </form>
     </div>
   );
 }
