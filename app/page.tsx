@@ -44,7 +44,7 @@ export default function Home() {
           >
             Profile
           </Link>
-          <Link href="/profile">
+          <Link href={`/profile/14`}>
             <Image
               src="https://picsum.photos/200?random=18"
               width={40}
