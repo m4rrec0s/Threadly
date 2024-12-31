@@ -20,8 +20,8 @@ body {
     --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
+    --primary: 45 88% 56%;
+    --primary-foreground: 32 75% 42%;
     --secondary: 0 0% 96.1%;
     --secondary-foreground: 0 0% 9%;
     --muted: 0 0% 96.1%;
@@ -47,8 +47,8 @@ body {
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
+    --primary: 45 88% 56%;
+    --primary-foreground: 32 75% 42%;
     --secondary: 0 0% 14.9%;
     --secondary-foreground: 0 0% 98%;
     --muted: 0 0% 14.9%;
@@ -76,3 +76,10 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Color Theme Swatches in HSLA */
+/* .Gold-&-Black-1-hsl { color: hsl(240, 4%, 4%); }
+.Gold-&-Black-2-hsl { color: hsl(240, 1%, 14%); }
+.Gold-&-Black-3-hsl { color: hsl(45, 88%, 56%); }
+.Gold-&-Black-4-hsl { color: hsl(38, 80%, 47%); }
+.Gold-&-Black-5-hsl { color: hsl(32, 75%, 42%); } */
