@@ -191,14 +191,14 @@ const PostsList = () => {
                       </Button>
                     ) : null}
                   </DialogTrigger>
-                  <DialogContent>
+                  <DialogContent className="px-0 max-w-[300px] max-h-[400px]">
                     <DialogHeader>
                       <DialogTitle className="text-center">
                         Curtidas
                       </DialogTitle>
                     </DialogHeader>
-                    <div className="border-t border-gray-600"></div>
-                    <div className="flex flex-col space-y-3">
+                    <div className=" border-t-[0.5px] border-gray-600 border-separate"></div>
+                    <div className="flex flex-col space-y-3 h-full overflow-y-auto max-h-[300px] px-2">
                       {loading ? (
                         <div>Loading likes...</div>
                       ) : post.likes ? (
@@ -310,9 +310,17 @@ const PostsList = () => {
                                 </span>{" "}
                                 {comment.content}
                               </p>
-                              <span className="text-xs text-gray-500">
-                                {dateConvert(comment.created_at)}
-                              </span>
+                              <div className="flex items-center space-x-2">
+                                <span className="text-xs text-gray-500">
+                                  {dateConvert(comment.created_at)}
+                                </span>
+                                <Button
+                                  variant={"link"}
+                                  className="p-0 hover:no-underline"
+                                >
+                                  Responder
+                                </Button>
+                              </div>
                             </div>
                           </div>
                         );
