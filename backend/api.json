@@ -1,0 +1,519 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "Alice Silva",
+      "username": "alice.silva",
+      "email": "alice.silva@example.com",
+      "image": "https://picsum.photos/200",
+      "created_at": "2024-12-01T10:00:00Z",
+      "password": "randomPassword1",
+      "posts": [
+        {
+          "id": "1",
+          "content": "Explorando a natureza!",
+          "image_url": "https://picsum.photos/200",
+          "created_at": "2024-12-01T20:00:00Z",
+          "comments": [
+            {
+              "id": "1",
+              "content": "Que foto incrível!",
+              "author_id": "2",
+              "created_at": "2024-12-01T21:00:00Z",
+              "answers": [
+                {
+                  "id": "1",
+                  "content": "Obrigada!",
+                  "author_id": "1",
+                  "created_at": "2024-12-01T21:30:00Z"
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "content": "A natureza é maravilhosa!",
+              "author_id": "3",
+              "created_at": "2024-12-01T21:30:00Z",
+              "answers": [
+                {
+                  "id": "2",
+                  "content": "Obrigada!",
+                  "author_id": "1",
+                  "created_at": "2024-12-01T21:30:00Z"
+                }
+              ]
+            },
+            {
+              "id": "3",
+              "content": "Quero visitar esse lugar!",
+              "author_id": "7",
+              "created_at": "2024-12-01T22:00:00Z",
+              "answers": [
+                {
+                  "id": "3",
+                  "content": "Venha comigo!",
+                  "author_id": "2",
+                  "created_at": "2024-12-01T22:30:00Z"
+                }
+              ]
+            }
+          ],
+          "likes": [
+            {
+              "id": "1",
+              "user_id": "3",
+              "created_at": "2024-12-01T22:00:00Z"
+            },
+            {
+              "id": "2",
+              "user_id": "2",
+              "created_at": "2024-12-01T22:30:00Z"
+            },
+            {
+              "id": "3",
+              "user_id": "1",
+              "created_at": "2024-12-01T23:00:00Z"
+            }
+          ]
+        },
+        {
+          "id": "2",
+          "content": "Café da manhã perfeito!",
+          "image_url": "https://picsum.photos/200",
+          "created_at": "2024-12-02T08:00:00Z",
+          "comments": [
+            {
+              "id": "2",
+              "content": "Adorei o café!",
+              "author_id": "3",
+              "created_at": "2024-12-02T09:30:00Z",
+              "answers": [
+                {
+                  "id": "1",
+                  "content": "Obrigada!",
+                  "author_id": "2",
+                  "created_at": "2024-12-01T21:30:00Z"
+                }
+              ]
+            }
+          ],
+          "likes": [
+            {
+              "id": "2",
+              "user_id": "2",
+              "created_at": "2024-12-02T10:00:00Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "name": "Bruno Costa",
+      "username": "bruno.costa",
+      "email": "bruno.costa@example.com",
+      "image": "https://picsum.photos/200",
+      "created_at": "2024-12-02T11:00:00Z",
+      "password": "randomPassword2",
+      "posts": [
+        {
+          "id": "3",
+          "content": "Pronto para mais um dia!",
+          "image_url": "https://picsum.photos/200",
+          "created_at": "2024-12-03T09:00:00Z",
+          "comments": [
+            {
+              "id": "1",
+              "content": "Bom dia!",
+              "author_id": "1",
+              "created_at": "2024-12-03T10:00:00Z",
+              "answers": [
+                {
+                  "id": "1",
+                  "content": "Bom dia!",
+                  "author_id": "2",
+                  "created_at": "2024-12-03T11:00:00Z"
+                }
+              ]
+            }
+          ],
+          "likes": [
+            {
+              "id": "1",
+              "user_id": "1",
+              "created_at": "2024-12-03T12:00:00Z"
+            },
+            {
+              "id": "2",
+              "user_id": "2",
+              "created_at": "2024-12-03T13:00:00Z"
+            },
+            {
+              "id": "3",
+              "user_id": "3",
+              "created_at": "2024-12-03T14:00:00Z"
+            },
+            {
+              "id": "4",
+              "user_id": "4",
+              "created_at": "2024-12-03T15:00:00Z"
+            }
+          ]
+        },
+        {
+          "id": "4",
+          "content": "Trabalho finalizado com sucesso.",
+          "image_url": "https://picsum.photos/200",
+          "created_at": "2024-12-03T18:00:00Z",
+          "comments": [
+            {
+              "id": "3",
+              "content": "Parabéns pelo trabalho!",
+              "author_id": "1",
+              "created_at": "2024-12-03T19:00:00Z",
+              "answers": [
+                {
+                  "id": "1",
+                  "content": "Obrigada!",
+                  "author_id": "1",
+                  "created_at": "2024-12-01T21:30:00Z"
+                }
+              ]
+            }
+          ],
+          "likes": [
+            {
+              "id": "3",
+              "user_id": "3",
+              "created_at": "2024-12-03T20:00:00Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "name": "Carla Oliveira",
+      "username": "carla.oliveira",
+      "email": "carla.oliveira@example.com",
+      "image": "https://picsum.photos/200",
+      "created_at": "2024-12-03T12:00:00Z",
+      "password": "randomPassword3",
+      "posts": [
+        {
+          "id": "5",
+          "content": "Um dia incrível!",
+          "image_url": "https://picsum.photos/200",
+          "created_at": "2024-12-04T10:30:00Z"
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "name": "Daniel Souza",
+      "username": "daniel.souza",
+      "email": "daniel.souza@example.com",
+      "image": "https://picsum.photos/200",
+      "created_at": "2024-12-04T13:00:00Z",
+      "password": "randomPassword4",
+      "posts": []
+    },
+    {
+      "id": "5",
+      "name": "Eva Lima",
+      "username": "eva.lima",
+      "email": "eva.lima@example.com",
+      "image": "https://picsum.photos/200",
+      "created_at": "2024-12-05T14:00:00Z",
+      "password": "randomPassword5",
+      "posts": []
+    },
+    {
+      "id": "6",
+      "name": "Felipe Rocha",
+      "username": "felipe.rocha",
+      "email": "felipe.rocha@example.com",
+      "image": "https://picsum.photos/200",
+      "created_at": "2024-12-06T15:00:00Z",
+      "password": "randomPassword6",
+      "posts": []
+    },
+    {
+      "id": "7",
+      "name": "Gabriela Martins",
+      "username": "gabriela.martins",
+      "email": "gabriela.martins@example.com",
+      "image": "https://picsum.photos/200",
+      "created_at": "2024-12-07T16:00:00Z",
+      "password": "randomPassword7",
+      "posts": []
+    },
+    {
+      "id": "8",
+      "name": "Henrique Almeida",
+      "username": "henrique.almeida",
+      "email": "henrique.almeida@example.com",
+      "image": "https://picsum.photos/200",
+      "created_at": "2024-12-08T17:00:00Z",
+      "password": "randomPassword8",
+      "posts": []
+    },
+    {
+      "id": "9",
+      "name": "Isabela Ferreira",
+      "username": "isabela.ferreira",
+      "email": "isabela.ferreira@example.com",
+      "image": "https://picsum.photos/200",
+      "created_at": "2024-12-09T18:00:00Z",
+      "password": "randomPassword9",
+      "posts": [
+        {
+          "id": "6",
+          "content": "Amanhecer lindo!",
+          "image_url": "https://picsum.photos/200",
+          "created_at": "2024-12-10T06:00:00Z",
+          "comments": [
+            {
+              "id": "4",
+              "content": "Que vista maravilhosa!",
+              "author_id": "1",
+              "created_at": "2024-12-10T07:00:00Z",
+              "answers": [
+                {
+                  "id": "1",
+                  "content": "Obrigada!",
+                  "author_id": "1",
+                  "created_at": "2024-12-01T21:30:00Z"
+                }
+              ]
+            }
+          ],
+          "likes": [
+            {
+              "id": "4",
+              "user_id": "2",
+              "created_at": "2024-12-10T08:00:00Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "name": "João Pedro",
+      "username": "joao.pedro",
+      "email": "joao.pedro@example.com",
+      "image": "https://picsum.photos/200",
+      "created_at": "2024-12-10T19:00:00Z",
+      "password": "randomPassword10",
+      "posts": [
+        {
+          "id": "7",
+          "content": "Treino concluído!",
+          "image_url": "https://picsum.photos/200",
+          "created_at": "2024-12-11T07:00:00Z",
+          "comments": [
+            {
+              "id": "5",
+              "content": "Parabéns pelo treino!",
+              "author_id": "3",
+              "created_at": "2024-12-11T08:00:00Z",
+              "answers": [
+                {
+                  "id": "1",
+                  "content": "Obrigada!",
+                  "author_id": "1",
+                  "created_at": "2024-12-01T21:30:00Z"
+                }
+              ]
+            }
+          ],
+          "likes": [
+            {
+              "id": "5",
+              "user_id": "4",
+              "created_at": "2024-12-11T09:00:00Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "name": "Karina Santos",
+      "username": "karina.santos",
+      "email": "karina.santos@example.com",
+      "image": "https://picsum.photos/200",
+      "created_at": "2024-12-11T20:00:00Z",
+      "password": "randomPassword11",
+      "posts": [
+        {
+          "id": "8",
+          "content": "Dia de praia!",
+          "image_url": "https://picsum.photos/200",
+          "created_at": "2024-12-12T10:00:00Z",
+          "comments": [
+            {
+              "id": "6",
+              "content": "Aproveite o sol!",
+              "author_id": "5",
+              "created_at": "2024-12-12T11:00:00Z",
+              "answers": [
+                {
+                  "id": "1",
+                  "content": "Obrigada!",
+                  "author_id": "1",
+                  "created_at": "2024-12-01T21:30:00Z"
+                }
+              ]
+            }
+          ],
+          "likes": [
+            {
+              "id": "6",
+              "user_id": "6",
+              "created_at": "2024-12-12T12:00:00Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "12",
+      "name": "Lucas Almeida",
+      "username": "lucas.almeida",
+      "email": "lucas.almeida@example.com",
+      "image": "https://picsum.photos/200",
+      "created_at": "2024-12-12T21:00:00Z",
+      "password": "randomPassword12",
+      "posts": [
+        {
+          "id": "9",
+          "content": "Noite de estudos.",
+          "image_url": "https://picsum.photos/200",
+          "created_at": "2024-12-13T20:00:00Z",
+          "comments": [
+            {
+              "id": "7",
+              "content": "Boa sorte nos estudos!",
+              "author_id": "7",
+              "created_at": "2024-12-13T21:00:00Z",
+              "answers": [
+                {
+                  "id": "1",
+                  "content": "Obrigada!",
+                  "author_id": "1",
+                  "created_at": "2024-12-01T21:30:00Z"
+                }
+              ]
+            }
+          ],
+          "likes": [
+            {
+              "id": "7",
+              "user_id": "8",
+              "created_at": "2024-12-13T22:00:00Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "13",
+      "name": "Mariana Lima",
+      "username": "mariana.lima",
+      "email": "mariana.lima@example.com",
+      "image": "https://picsum.photos/200",
+      "created_at": "2024-12-13T22:00:00Z",
+      "password": "randomPassword13",
+      "posts": [
+        {
+          "id": "10",
+          "content": "Fim de semana relaxante.",
+          "image_url": "https://picsum.photos/200",
+          "created_at": "2024-12-14T15:00:00Z",
+          "comments": [
+            {
+              "id": "8",
+              "content": "Aproveite o descanso!",
+              "author_id": "9",
+              "created_at": "2024-12-14T16:00:00Z",
+              "answers": [
+                {
+                  "id": "1",
+                  "content": "Obrigada!",
+                  "author_id": "13",
+                  "created_at": "2024-12-01T21:30:00Z"
+                }
+              ]
+            },
+            {
+              "id": "9",
+              "content": "Descanse bastante!",
+              "author_id": "10",
+              "created_at": "2024-12-14T17:00:00Z"
+            },
+            {
+              "id": "10",
+              "content": "Aproveite o fim de semana!",
+              "author_id": "11",
+              "created_at": "2024-12-14T18:00:00Z"
+            },
+            {
+              "id": "11",
+              "content": "Relaxe e divirta-se!",
+              "author_id": "12",
+              "created_at": "2024-12-14T19:00:00Z"
+            }
+          ],
+          "likes": [
+            {
+              "id": "8",
+              "user_id": "10",
+              "created_at": "2024-12-14T17:00:00Z"
+            },
+            {
+              "id": "9",
+              "user_id": "11",
+              "created_at": "2024-12-14T18:00:00Z"
+            },
+            {
+              "id": "10",
+              "user_id": "12",
+              "created_at": "2024-12-14T19:00:00Z"
+            },
+            {
+              "id": "11",
+              "user_id": "13",
+              "created_at": "2024-12-14T20:00:00Z"
+            },
+            {
+              "id": "12",
+              "user_id": "1",
+              "created_at": "2024-12-14T21:00:00Z"
+            },
+            {
+              "id": "13",
+              "user_id": "2",
+              "created_at": "2024-12-14T22:00:00Z"
+            },
+            {
+              "id": "14",
+              "user_id": "3",
+              "created_at": "2024-12-14T23:00:00Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "830f0c80-ba85-4342-8c6a-5780befa103e",
+      "name": "Marcos Henrique",
+      "email": "marcos_henrique@email.com",
+      "password": "$2b$08$IVXt0rQZAv3rkfuoQp924uAkGY47zJvs.ignQprvrbZzFvsZgyG2e",
+      "username": "marcos_henrique_eu",
+      "image": "",
+      "posts": []
+    }
+  ]
+}
