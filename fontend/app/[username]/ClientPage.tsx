@@ -38,7 +38,9 @@ export default function ClientPage({ username }: { username: string }) {
       <main className="flex flex-col items-center p-5">
         <div className="flex flex-col items-center space-y-4 w-full max-w-md">
           <Image
-            src={`${user.image}?random=${user.id}`}
+            src={`https://picsum.photos/200?random=${
+              Math.floor(Math.random() * 100) + 1
+            }`}
             alt={`${user.name} avatar`}
             className="rounded-full object-cover"
             width={200}

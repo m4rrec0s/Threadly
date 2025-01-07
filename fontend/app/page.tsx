@@ -20,13 +20,11 @@ export default function Home() {
     return null;
   }
 
-  user.image = "https://picsum.photos/200?random=18";
-  user.username = "marcos_henrique_eu";
-
+  user.image = `https://avatars.githubusercontent.com/u/147518177?v=4`;
   return (
-    <main className="flex flex-col w-screen h-screen">
+    <div className="flex flex-col w-screen h-screen">
       <Header user={user} />
       <PostsList />
-    </main>
+    </div>
   );
 }
