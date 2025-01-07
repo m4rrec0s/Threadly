@@ -5,6 +5,7 @@ import { useAuth } from "../context/authContext";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 import Link from "next/link";
+import { LockIcon, User2Icon } from "lucide-react";
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -17,11 +18,25 @@ export default function LoginPage() {
     e.preventDefault();
     setError(null);
 
+    if (!username || !password) {
+      setError("Please fill all the fields.");
+      return;
+    }
+
+    if (username.length < 6) {
+      setError("Username must be at least 3 characters long.");
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters long.");
+      return;
+    }
+
     try {
       await login(username, password);
     } catch (err) {
-      setError("Login failed. Please check your username and password.");
-      console.error("Login failed", err);
+      setError(`Invalid username or password. ${(err as Error).message}`);
     }
   };
 
@@ -32,22 +47,31 @@ export default function LoginPage() {
           <h3 className="text-2xl font-extrabold text-center mb-4">Threadly</h3>
           <div className="my-6 space-y-3">
             <div className="space-y-2">
-              <Input
-                type="text"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-                className="focus-visible:ring-0 text-xs"
-              />
-              <Input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="focus-visible:ring-0 text-xs"
-              />
+              <div className="flex items-center relative">
+                <User2Icon
+                  size={20}
+                  className="text-white/30 absolute left-2"
+                />
+                <Input
+                  type="text"
+                  placeholder="Username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                  className="focus-visible:ring-0 text-xs pl-8"
+                />
+              </div>
+              <div className="flex items-center relative">
+                <LockIcon size={20} className="text-white/30 absolute left-2" />
+                <Input
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="focus-visible:ring-0 text-xs pl-8"
+                />
+              </div>
               {error && <p className="text-red-500 text-xs">{error}</p>}
             </div>
             <Button
