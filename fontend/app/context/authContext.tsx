@@ -1,6 +1,6 @@
 "use client";
 
-import {
+import React, {
   createContext,
   useState,
   useContext,
@@ -37,21 +37,22 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
-  const [token, setToken] = useState<string | null>(() =>
-    localStorage.getItem("token")
-  );
-  const [user, setUser] = useState<User | null>(() => {
-    const storedUser = localStorage.getItem("user");
-    return storedUser ? JSON.parse(storedUser) : null;
-  });
+
+  // Inicializa como null para evitar acesso no SSR
+  const [token, setToken] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
 
+  // UseEffect para buscar dados do localStorage no cliente
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    const storedUser = localStorage.getItem("user");
-    if (storedToken && storedUser) {
+    const storedToken =
+      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const storedUserJson =
+      typeof window !== "undefined" ? localStorage.getItem("user") : null;
+
+    if (storedToken && storedUserJson) {
       setToken(storedToken);
-      setUser(JSON.parse(storedUser));
+      setUser(JSON.parse(storedUserJson));
     }
     setIsInitialized(true);
   }, []);
@@ -62,15 +63,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         username,
         password,
       });
-
       const { token, user } = response.data;
+
+      // Salva apenas no momento do login, após SSR
       setToken(token);
       setUser(user);
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
       router.push("/");
     } catch (error) {
-      console.error("Login failed", error);
+      throw new Error((error as Error).message);
     }
   };
 
