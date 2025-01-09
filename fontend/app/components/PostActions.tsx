@@ -57,7 +57,7 @@ const PostActions: React.FC<PostActionsProps> = ({ post, users }) => {
                       return (
                         <Image
                           key={index}
-                          src={`${user?.image}`}
+                          src={user?.image || ""}
                           alt="user image"
                           width={20}
                           height={20}
