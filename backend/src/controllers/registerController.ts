@@ -4,11 +4,11 @@ import { v4 as uuidv4 } from "uuid";
 import { User } from "../types/Users";
 
 export default async function registerController(req: any, res: any) {
-  const { name, email, username, password } = req.body;
+  const { name, email, username, password, image, posts } = req.body;
 
   if (!name || !email || !password || !username) {
     return res.status(400).json({
-      message: "name, email and password is required.",
+      message: "name, email, username, and password are required.",
     });
   }
 
@@ -37,8 +37,9 @@ export default async function registerController(req: any, res: any) {
     email,
     password: hashPassword,
     username,
-    image: "",
-    posts: [],
+    create_at: new Date().toISOString(),
+    image: image || "",
+    posts: posts || [],
   };
 
   await writeData("users", newUser);

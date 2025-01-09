@@ -1,7 +1,7 @@
 import { readData, writeData } from "../utils/databaseManager";
 import bcrypt from "bcrypt";
-import { v4 as uuidv4 } from "uuid";
 import { createToken } from "../utils/jwtManager";
+import { User } from "../types/Users";
 
 export default async function loginController(req: any, res: any) {
   const { username, password } = req.body;
@@ -12,9 +12,9 @@ export default async function loginController(req: any, res: any) {
     });
   }
 
-  const users = await readData("users");
+  const users: User[] = await readData("users");
 
-  const userExists = users.find((user: any) => user.username === username);
+  const userExists = users.find((user: User) => user.username === username);
 
   if (!userExists) {
     return res.status(403).json({

@@ -1,16 +1,15 @@
 {
   "users": [
     {
-      "id": "1",
-      "name": "Alice Silva",
-      "username": "alice.silva",
-      "email": "alice.silva@example.com",
-      "image": "https://picsum.photos/200",
-      "created_at": "2024-12-01T10:00:00Z",
-      "password": "randomPassword1",
+      "id": "830f0c80-ba85-4342-8c6a-5780befa103e",
+      "name": "Marcos Henrique",
+      "email": "marcos_henrique@email.com",
+      "password": "$2b$08$IVXt0rQZAv3rkfuoQp924uAkGY47zJvs.ignQprvrbZzFvsZgyG2e",
+      "username": "marcos_henrique_eu",
+      "image": "https://avatars.githubusercontent.com/u/147518177?v=4",
       "posts": [
         {
-          "id": "1",
+          "id": "182h31982h1bb3182b31982b",
           "content": "Explorando a natureza!",
           "image_url": "https://picsum.photos/200",
           "created_at": "2024-12-01T20:00:00Z",
@@ -18,13 +17,13 @@
             {
               "id": "1",
               "content": "Que foto incrível!",
-              "author_id": "2",
+              "author_id": "10",
               "created_at": "2024-12-01T21:00:00Z",
               "answers": [
                 {
                   "id": "1",
                   "content": "Obrigada!",
-                  "author_id": "1",
+                  "author_id": "830f0c80-ba85-4342-8c6a-5780befa103e",
                   "created_at": "2024-12-01T21:30:00Z"
                 }
               ]
@@ -37,8 +36,8 @@
               "answers": [
                 {
                   "id": "2",
-                  "content": "Obrigada!",
-                  "author_id": "1",
+                  "content": "Verdade viu!",
+                  "author_id": "830f0c80-ba85-4342-8c6a-5780befa103e",
                   "created_at": "2024-12-01T21:30:00Z"
                 }
               ]
@@ -72,49 +71,45 @@
             {
               "id": "3",
               "user_id": "1",
-              "created_at": "2024-12-01T23:00:00Z"
-            }
-          ]
-        },
-        {
-          "id": "2",
-          "content": "Café da manhã perfeito!",
-          "image_url": "https://picsum.photos/200",
-          "created_at": "2024-12-02T08:00:00Z",
-          "comments": [
+              "created_at": "2024-12-01T23:00:"
+            },
             {
-              "id": "2",
-              "content": "Adorei o café!",
-              "author_id": "3",
-              "created_at": "2024-12-02T09:30:00Z",
-              "answers": [
-                {
-                  "id": "1",
-                  "content": "Obrigada!",
-                  "author_id": "2",
-                  "created_at": "2024-12-01T21:30:00Z"
-                }
-              ]
-            }
-          ],
-          "likes": [
+              "id": "4",
+              "user_id": "830f0c80-ba85-4342-8c6a-5780befa103e",
+              "created_at": "2024-12-01T23:00:"
+            },
             {
-              "id": "2",
-              "user_id": "2",
-              "created_at": "2024-12-02T10:00:00Z"
+              "id": "5",
+              "user_id": "10",
+              "created_at": "2024-12-01T23:00:"
+            },
+            {
+              "id": "6",
+              "user_id": "11",
+              "created_at": "2024-12-01T23:00:"
             }
           ]
         }
       ]
     },
     {
-      "id": "2",
+      "id": "714c19ed-7bab-4c8b-9537-5369498b628b",
+      "name": "Alice Silva",
+      "email": "alice.silva@example.com",
+      "password": "$2b$08$wR6KMx.nUvUW9YDWD.vUT.6Tqk26K.nHZ1.whcQJcC73vSB85EUGG",
+      "username": "alice.silva",
+      "create_at": "2025-01-09T01:32:25.348Z",
+      "image": "https://xsgames.co/randomusers/avatar.php?g=female",
+      "posts": []
+    },
+    {
+      "id": "1308bb3e-e613-4cd4-b7d7-97dd95db6912",
       "name": "Bruno Costa",
-      "username": "bruno.costa",
       "email": "bruno.costa@example.com",
-      "image": "https://picsum.photos/200",
-      "created_at": "2024-12-02T11:00:00Z",
-      "password": "randomPassword2",
+      "password": "$2b$08$q39SDhj65NrfUth7qeefxebrmNttIMSiIjlYV/dzOivKdVObKxr3S",
+      "username": "bruno.costa",
+      "create_at": "2025-01-09T01:46:58.996Z",
+      "image": "https://xsgames.co/randomusers/avatar.php?g=male",
       "posts": [
         {
           "id": "3",
@@ -192,13 +187,13 @@
       ]
     },
     {
-      "id": "3",
+      "id": "48ef683c-1a6c-4f63-92f7-2df3831ca8be",
       "name": "Carla Oliveira",
-      "username": "carla.oliveira",
       "email": "carla.oliveira@example.com",
-      "image": "https://picsum.photos/200",
-      "created_at": "2024-12-03T12:00:00Z",
-      "password": "randomPassword3",
+      "password": "$2b$08$wssyckT5O7MRRWMLx1TXAOKXxyYm6kzl2r5C0x3bdtwbz9BjvEcWi",
+      "username": "carla.oliveira",
+      "create_at": "2025-01-09T01:47:38.803Z",
+      "image": "https://xsgames.co/randomusers/avatar.php?g=female",
       "posts": [
         {
           "id": "5",
@@ -209,63 +204,63 @@
       ]
     },
     {
-      "id": "4",
+      "id": "2ed78db8-677e-4e35-a91d-45510c2e1ece",
       "name": "Daniel Souza",
-      "username": "daniel.souza",
       "email": "daniel.souza@example.com",
-      "image": "https://picsum.photos/200",
-      "created_at": "2024-12-04T13:00:00Z",
-      "password": "randomPassword4",
+      "password": "$2b$08$k9MiRqjWWquKZbipxPnJw.14I4WMgJ/q0y0VhtTuSmcVp0gx65T9S",
+      "username": "daniel.souza",
+      "create_at": "2025-01-09T01:48:02.446Z",
+      "image": "https://xsgames.co/randomusers/avatar.php?g=male",
       "posts": []
     },
     {
-      "id": "5",
+      "id": "e8b0c9f1-0d72-41b1-ad09-54b294145896",
       "name": "Eva Lima",
-      "username": "eva.lima",
       "email": "eva.lima@example.com",
-      "image": "https://picsum.photos/200",
-      "created_at": "2024-12-05T14:00:00Z",
-      "password": "randomPassword5",
+      "password": "$2b$08$jNT8XuVmeZyNyuqDHTU6vukyQvNjBA.258QIZKov.zDKmP1JUnm1i",
+      "username": "eva.lima",
+      "create_at": "2025-01-09T01:48:18.689Z",
+      "image": "https://xsgames.co/randomusers/avatar.php?g=female",
       "posts": []
     },
     {
-      "id": "6",
+      "id": "28092f47-da82-4195-8a68-73a31f63737e",
       "name": "Felipe Rocha",
-      "username": "felipe.rocha",
       "email": "felipe.rocha@example.com",
-      "image": "https://picsum.photos/200",
-      "created_at": "2024-12-06T15:00:00Z",
-      "password": "randomPassword6",
+      "password": "$2b$08$RJBIra9GqTTHU5rmc.70Iu4CfGeZ/p2A0hw.DV5rK9xsokboEWKYK",
+      "username": "felipe.rocha",
+      "create_at": "2025-01-09T01:48:35.178Z",
+      "image": "https://xsgames.co/randomusers/avatar.php?g=male",
       "posts": []
     },
     {
-      "id": "7",
+      "id": "409d2a1a-12b9-4092-8270-2df567a2a0ae",
       "name": "Gabriela Martins",
-      "username": "gabriela.martins",
       "email": "gabriela.martins@example.com",
-      "image": "https://picsum.photos/200",
-      "created_at": "2024-12-07T16:00:00Z",
-      "password": "randomPassword7",
+      "password": "$2b$08$n8d9cO/eF7/rlOZ9owkuzOlofo5mdy2g9tZSs.CV2BTS82YKFgiMm",
+      "username": "gabriela.martins",
+      "create_at": "2025-01-09T01:48:46.206Z",
+      "image": "https://xsgames.co/randomusers/avatar.php?g=female",
       "posts": []
     },
     {
-      "id": "8",
+      "id": "e89fcc12-4e9b-40da-8287-1acd5df4223b",
       "name": "Henrique Almeida",
-      "username": "henrique.almeida",
       "email": "henrique.almeida@example.com",
-      "image": "https://picsum.photos/200",
-      "created_at": "2024-12-08T17:00:00Z",
-      "password": "randomPassword8",
+      "password": "$2b$08$hETKjro/YbOO7MtslXWXke6JaYEMg/e8R4WhwaStNZqHJwm2dNbxO",
+      "username": "henrique.almeida",
+      "create_at": "2025-01-09T01:49:07.340Z",
+      "image": "https://xsgames.co/randomusers/avatar.php?g=male",
       "posts": []
     },
     {
-      "id": "9",
+      "id": "5d9e7642-4419-4fff-a693-0916cff86f97",
       "name": "Isabela Ferreira",
-      "username": "isabela.ferreira",
       "email": "isabela.ferreira@example.com",
-      "image": "https://picsum.photos/200",
-      "created_at": "2024-12-09T18:00:00Z",
-      "password": "randomPassword9",
+      "password": "$2b$08$IIZn1U/s/oY1e4x5iqXTUeMoCQTy7typcw8cROimL8gZ.2S/YyCAy",
+      "username": "isabela.ferreira",
+      "create_at": "2025-01-09T01:49:59.925Z",
+      "image": "https://xsgames.co/randomusers/avatar.php?g=female",
       "posts": [
         {
           "id": "6",
@@ -299,13 +294,13 @@
       ]
     },
     {
-      "id": "10",
+      "id": "bdbc757d-881e-499f-8cdd-38f97bbd5278",
       "name": "João Pedro",
-      "username": "joao.pedro",
       "email": "joao.pedro@example.com",
-      "image": "https://picsum.photos/200",
-      "created_at": "2024-12-10T19:00:00Z",
-      "password": "randomPassword10",
+      "password": "$2b$08$th7Vhl50pTbdbJAXK22y3efI/Bc35M86YDxRoLrrpR/18IDGXoXwC",
+      "username": "joao.pedro",
+      "create_at": "2025-01-09T01:50:20.147Z",
+      "image": "https://xsgames.co/randomusers/avatar.php?g=male",
       "posts": [
         {
           "id": "7",
@@ -339,93 +334,13 @@
       ]
     },
     {
-      "id": "11",
-      "name": "Karina Santos",
-      "username": "karina.santos",
-      "email": "karina.santos@example.com",
-      "image": "https://picsum.photos/200",
-      "created_at": "2024-12-11T20:00:00Z",
-      "password": "randomPassword11",
-      "posts": [
-        {
-          "id": "8",
-          "content": "Dia de praia!",
-          "image_url": "https://picsum.photos/200",
-          "created_at": "2024-12-12T10:00:00Z",
-          "comments": [
-            {
-              "id": "6",
-              "content": "Aproveite o sol!",
-              "author_id": "5",
-              "created_at": "2024-12-12T11:00:00Z",
-              "answers": [
-                {
-                  "id": "1",
-                  "content": "Obrigada!",
-                  "author_id": "1",
-                  "created_at": "2024-12-01T21:30:00Z"
-                }
-              ]
-            }
-          ],
-          "likes": [
-            {
-              "id": "6",
-              "user_id": "6",
-              "created_at": "2024-12-12T12:00:00Z"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "12",
-      "name": "Lucas Almeida",
-      "username": "lucas.almeida",
-      "email": "lucas.almeida@example.com",
-      "image": "https://picsum.photos/200",
-      "created_at": "2024-12-12T21:00:00Z",
-      "password": "randomPassword12",
-      "posts": [
-        {
-          "id": "9",
-          "content": "Noite de estudos.",
-          "image_url": "https://picsum.photos/200",
-          "created_at": "2024-12-13T20:00:00Z",
-          "comments": [
-            {
-              "id": "7",
-              "content": "Boa sorte nos estudos!",
-              "author_id": "7",
-              "created_at": "2024-12-13T21:00:00Z",
-              "answers": [
-                {
-                  "id": "1",
-                  "content": "Obrigada!",
-                  "author_id": "1",
-                  "created_at": "2024-12-01T21:30:00Z"
-                }
-              ]
-            }
-          ],
-          "likes": [
-            {
-              "id": "7",
-              "user_id": "8",
-              "created_at": "2024-12-13T22:00:00Z"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "13",
+      "id": "b645d5ab-db30-49e5-b916-685b42bff99b",
       "name": "Mariana Lima",
-      "username": "mariana.lima",
       "email": "mariana.lima@example.com",
-      "image": "https://picsum.photos/200",
-      "created_at": "2024-12-13T22:00:00Z",
-      "password": "randomPassword13",
+      "password": "$2b$08$iU1ZsflPQgV1A7DteCI5pufR9eRcCiaypVjA.Zwky5CnQnUw4pTcO",
+      "username": "mariana.lima",
+      "create_at": "2025-01-09T01:50:32.338Z",
+      "image": "https://xsgames.co/randomusers/avatar.php?g=female",
       "posts": [
         {
           "id": "10",
@@ -505,15 +420,6 @@
           ]
         }
       ]
-    },
-    {
-      "id": "830f0c80-ba85-4342-8c6a-5780befa103e",
-      "name": "Marcos Henrique",
-      "email": "marcos_henrique@email.com",
-      "password": "$2b$08$IVXt0rQZAv3rkfuoQp924uAkGY47zJvs.ignQprvrbZzFvsZgyG2e",
-      "username": "marcos_henrique_eu",
-      "image": "",
-      "posts": []
     }
   ]
 }
