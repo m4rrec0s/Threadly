@@ -13,11 +13,9 @@ export default function ClientPage({ username }: { username: string }) {
     axiosClient
       .get(`/users?username=${username}`)
       .then((response) => {
-        // Se json-server retorna um array, pegue o primeiro item
         const userData = Array.isArray(response.data)
           ? response.data[0]
           : response.data;
-        console.log(userData);
         setUser(userData);
         setLoading(false);
       })
@@ -27,7 +25,13 @@ export default function ClientPage({ username }: { username: string }) {
       });
   }, [username]);
 
-  if (loading) return <p>Carregando...</p>;
+  if (loading)
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <h1 className="font-extrabold text-6xl animate-pulse">Threadly</h1>
+      </div>
+    );
+
   if (!user) return <p>Usuário não encontrado</p>;
 
   return (
@@ -38,9 +42,7 @@ export default function ClientPage({ username }: { username: string }) {
       <main className="flex flex-col items-center p-5">
         <div className="flex flex-col items-center space-y-4 w-full max-w-md">
           <Image
-            src={`https://picsum.photos/200?random=${
-              Math.floor(Math.random() * 100) + 1
-            }`}
+            src={user.image || "/path/to/default/avatar.png"}
             alt={`${user.name} avatar`}
             className="rounded-full object-cover"
             width={200}
