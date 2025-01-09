@@ -49,16 +49,20 @@ export default function Home() {
     );
 
   return (
-    <div className="flex justify-center w-screen h-screen relative items-stretch">
-      <Menu user={userLogged} />
-      <div className="flex justify-center w-full gap-16 py-6 px-2">
+    <div className="grid grid-cols-[18%_80%] w-screen h-screen relative items-stretch">
+      <div className="col-span-1 fixed top-0 left-0 h-full">
+        <Menu user={userLogged} />
+      </div>
+      <div className="col-span-1 col-start-2 flex justify-center w-full gap-16 py-6 px-2">
         <PostsList />
         <section className="flex justify-between items-center h-fit w-96 p-6">
           <div className="flex items-center gap-2">
             <Link href={`/${userLogged?.username}`}>
               <Avatar>
                 <AvatarImage src={userLogged?.image} />
-                <AvatarFallback>{userLogged?.name.slice(0, 2)}</AvatarFallback>
+                <AvatarFallback>
+                  <div className="flex-grow bg-slate-500 animate-pulse"></div>
+                </AvatarFallback>
               </Avatar>
             </Link>
             <div className="leading-5">
