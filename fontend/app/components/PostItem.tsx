@@ -4,6 +4,7 @@ import { User } from "../types/Users";
 import { dateConvert } from "../helpers/dateConvert";
 import PostActions from "./PostActions";
 import PostComments from "./PostComments";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 interface PostItemProps {
   post: Post;
@@ -14,25 +15,28 @@ const PostItem: React.FC<PostItemProps> = ({ post, users }) => {
   return (
     <div>
       <div className="flex items-center space-x-2">
-        <Image
-          src={`${post.user.image}?random=${post.user.id}`}
-          alt="user image"
-          width={30}
-          height={30}
-          className="rounded-full"
-        />
+        <Avatar className="h-8 w-8">
+          <AvatarImage
+            src={`${post.user.image}`}
+            alt={"user image - " + post.user.id}
+          />
+          <AvatarFallback>{post.user.username.charAt(0)}</AvatarFallback>
+        </Avatar>
         <h3 className="font-normal text-base">{post.user.username}</h3>
       </div>
 
       <div className="mt-3">
-        <Image
-          src={`${post.image_url}?random=${
-            Math.floor(Math.random() * 100) + 1
-          }`}
-          alt={"post image " + post.id}
-          width={500}
-          height={500}
-        />
+        <div className="relative w-[468px] h-[585px]">
+          <Image
+            src={`${post.image_url}?random=${
+              Math.floor(Math.random() * 100) + 1
+            }`}
+            alt={"post image " + post.id}
+            priority
+            layout="fill"
+            className="object-cover rounded-lg"
+          />
+        </div>
         <PostActions post={post} users={users} />
         <div className="mt-3">
           <p className="text-base">

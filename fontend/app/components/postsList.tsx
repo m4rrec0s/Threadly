@@ -67,8 +67,8 @@ const PostsList = () => {
   }
 
   return (
-    <div className="flex-grow overflow-y-auto py-6 px-2">
-      <section className="space-y-6 w-full flex flex-col items-center max-w-2xl mx-auto">
+    <div className="">
+      <section className="space-y-6 w-full flex flex-col items-center max-w-3xl mx-auto">
         {posts.length > 0 ? (
           posts.map((post) => (
             <PostItem key={post.id} post={post} users={users} />

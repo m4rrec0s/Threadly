@@ -57,7 +57,7 @@ const PostActions: React.FC<PostActionsProps> = ({ post, users }) => {
                       return (
                         <Image
                           key={index}
-                          src={`${user?.image}?random=${like.user_id}`}
+                          src={`${user?.image}`}
                           alt="user image"
                           width={20}
                           height={20}
@@ -92,7 +92,7 @@ const PostActions: React.FC<PostActionsProps> = ({ post, users }) => {
                       className="flex items-center space-x-3 py-2 hover:bg-white/10 transition-all rounded-lg"
                     >
                       <Image
-                        src={`${user?.image}?random=${like.user_id}`}
+                        src={`${user?.image}`}
                         alt="user image"
                         width={30}
                         height={30}
