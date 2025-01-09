@@ -9,14 +9,7 @@ import React, {
 } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-
-interface User {
-  id?: string;
-  name: string;
-  email: string;
-  image: string;
-  username: string;
-}
+import { User } from "../types/Users";
 
 interface AuthContextProps {
   user: User | null;
@@ -38,12 +31,10 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
 
-  // Inicializa como null para evitar acesso no SSR
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // UseEffect para buscar dados do localStorage no cliente
   useEffect(() => {
     const storedToken =
       typeof window !== "undefined" ? localStorage.getItem("token") : null;
@@ -65,7 +56,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       });
       const { token, user } = response.data;
 
-      // Salva apenas no momento do login, após SSR
       setToken(token);
       setUser(user);
       localStorage.setItem("token", token);
@@ -85,7 +75,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   if (!isInitialized) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <h1 className="font-extrabold text-5xl animate-pulse">Threadly</h1>
+      </div>
+    );
   }
 
   return (
