@@ -10,6 +10,7 @@ import {
   Home,
   LogOut,
   MessageCircleMore,
+  PlusSquare,
   SearchIcon,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
@@ -36,9 +37,9 @@ const Menu = ({ user }: MenuProps) => {
     return null;
   }
   return (
-    <section className="h-screen fixed top-0 left-0 w-56 py-10 border-r border-white/30">
+    <section className="h-screen fixed top-0 left-0 px-3 py-10 border-r border-white/20">
       <div className="flex flex-col justify-between h-full px-6">
-        <div className="flex flex-col space-y-20">
+        <div className="flex flex-col space-y-14">
           <Link href={"/"}>
             <h1 className="text-xl font-extrabold">Threadly</h1>
           </Link>
@@ -60,11 +61,25 @@ const Menu = ({ user }: MenuProps) => {
                 </Link>
               );
             })}
+            <Button
+              variant={"link"}
+              className="hover:no-underline text-white font-light opacity-90 flex justify-start items-center px-0 gap-6"
+            >
+              <PlusSquare className="!h-8 !w-8" />
+              <span className="!text-lg">Create</span>
+            </Button>
             <Link
               href={`/${user.username}`}
-              className="flex items-center gap-6 hover:text-white/45 transition-colors"
+              className={cn("flex items-center gap-6 transition-colors", {
+                "font-extrabold opacity-100": pathename === `/${user.username}`,
+                "font-light opacity-90": pathename !== `/${user.username}`,
+              })}
             >
-              <Avatar className="h-8 w-7">
+              <Avatar
+                className={cn("h-8 w-8", {
+                  "border-2 border-white": pathename === `/${user.username}`,
+                })}
+              >
                 <AvatarImage src={user.image} />
                 <AvatarFallback>{user.name.slice(0, 2)}</AvatarFallback>
               </Avatar>
@@ -75,11 +90,12 @@ const Menu = ({ user }: MenuProps) => {
         <div className="">
           <Button
             variant={"link"}
-            className="hover:text-white/55 hover:no-underline text-white flex items-center gap-6"
+            className="hover:no-underline text-white font-light opacity-90 flex justify-start items-center px-0 gap-6"
             onClick={logout}
+            title="Logout"
           >
-            <LogOut className="h-6 w-6" />
-            <span className="text-lg">Logout</span>
+            <LogOut className="!h-6 !w-6" />
+            <span className="!text-lg">Logout</span>
           </Button>
         </div>
       </div>
