@@ -5,6 +5,7 @@ import { dateConvert } from "../helpers/dateConvert";
 import PostActions from "./PostActions";
 import PostComments from "./PostComments";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import Link from "next/link";
 
 interface PostItemProps {
   post: Post;
@@ -15,14 +16,18 @@ const PostItem: React.FC<PostItemProps> = ({ post, users }) => {
   return (
     <div>
       <div className="flex items-center space-x-2">
-        <Avatar className="h-8 w-8">
-          <AvatarImage
-            src={`${post.user.image}`}
-            alt={"user image - " + post.user.id}
-          />
-          <AvatarFallback>{post.user.username.charAt(0)}</AvatarFallback>
-        </Avatar>
-        <h3 className="font-normal text-base">{post.user.username}</h3>
+        <Link href={`/${post.user.username}`}>
+          <Avatar className="h-8 w-8">
+            <AvatarImage
+              src={`${post.user.image}`}
+              alt={"user image - " + post.user.id}
+            />
+            <AvatarFallback>{post.user.username.charAt(0)}</AvatarFallback>
+          </Avatar>
+        </Link>
+        <Link href={`/${post.user.username}`}>
+          <h3 className="font-normal text-base">{post.user.username}</h3>
+        </Link>
       </div>
 
       <div className="mt-3">
