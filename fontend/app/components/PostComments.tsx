@@ -46,7 +46,9 @@ const PostComments: React.FC<PostCommentsProps> = ({ post, users }) => {
               <div className="flex items-center space-x-2">
                 {post.user && (
                   <Image
-                    src={`${post.user.image}`}
+                    src={
+                      `${post.user.image}` || "/usuario-sem-foto-de-perfil.jpg"
+                    }
                     alt="user image"
                     width={30}
                     height={30}
@@ -78,7 +80,10 @@ const PostComments: React.FC<PostCommentsProps> = ({ post, users }) => {
                 <div key={comment.id}>
                   <div className="mt-3 flex items-center space-x-2">
                     <Image
-                      src={`${userComment?.image}`}
+                      src={
+                        `${userComment?.image}` ||
+                        "/usuario-sem-foto-de-perfil.jpg"
+                      }
                       alt="user image"
                       width={30}
                       height={30}
@@ -116,7 +121,10 @@ const PostComments: React.FC<PostCommentsProps> = ({ post, users }) => {
                           className="mt-3 flex items-center space-x-2"
                         >
                           <Image
-                            src={`${userAnswers?.image}`}
+                            src={
+                              `${userAnswers?.image}` ||
+                              "/usuario-sem-foto-de-perfil.jpg"
+                            }
                             alt="user image"
                             width={30}
                             height={30}

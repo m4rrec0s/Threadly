@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { Post } from "../types/Posts";
 import { User } from "../types/Users";
 import { dateConvert } from "../helpers/dateConvert";
@@ -6,6 +5,7 @@ import PostActions from "./PostActions";
 import PostComments from "./PostComments";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Link from "next/link";
+import Image from "next/image";
 
 interface PostItemProps {
   post: Post;
@@ -19,10 +19,12 @@ const PostItem: React.FC<PostItemProps> = ({ post, users }) => {
         <Link href={`/${post.user.username}`}>
           <Avatar className="h-8 w-8">
             <AvatarImage
-              src={`${post.user.image}`}
+              src={`${post.user.image}` || "/usuario-sem-foto-de-perfil.jpg"}
               alt={"user image - " + post.user.id}
             />
-            <AvatarFallback>{post.user.username.charAt(0)}</AvatarFallback>
+            <AvatarFallback>
+              <div className="flex-grow bg-slate-500 animate-pulse"></div>
+            </AvatarFallback>
           </Avatar>
         </Link>
         <Link href={`/${post.user.username}`}>
@@ -33,9 +35,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, users }) => {
       <div className="mt-3">
         <div className="relative w-[468px] h-[585px]">
           <Image
-            src={`${post.image_url}?random=${
-              Math.floor(Math.random() * 100) + 1
-            }`}
+            src={`http://localhost:8080/uploads/${post.images[0].url}`}
             alt={"post image " + post.id}
             priority
             layout="fill"
