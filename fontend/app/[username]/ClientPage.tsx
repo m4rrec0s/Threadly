@@ -16,19 +16,30 @@ export default function ClientPage({ username }: { username: string }) {
   const { user } = useAuth();
 
   useEffect(() => {
-    axiosClient
-      .get(`/users?username=${username}`)
-      .then((response) => {
-        const userData = Array.isArray(response.data)
-          ? response.data[0]
-          : response.data;
-        setUserF(userData);
+    const fetchUserData = async () => {
+      try {
+        const userResponse = await axiosClient.get(
+          `/users?username=${username}`
+        );
+        const userData = Array.isArray(userResponse.data)
+          ? userResponse.data[0]
+          : userResponse.data;
+
+        const postsResponse = await axiosClient.get(
+          `/posts?user_id=${userData.id}`
+        );
+        const postsData = postsResponse.data;
+
+        setUserF({ ...userData, posts: postsData });
+        console.log({ ...userData, posts: postsData });
         setLoading(false);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error(error);
         setLoading(false);
-      });
+      }
+    };
+
+    fetchUserData();
   }, [username]);
 
   if (loading)
@@ -103,7 +114,7 @@ export default function ClientPage({ username }: { username: string }) {
               userF.posts.map((post) => (
                 <div key={post.id} className="w-full h-0 pb-[100%] relative">
                   <Image
-                    src={`${post.image_url}?random=${post.id}`}
+                    src={`http://localhost:8080/uploads/${post.images[0].url}`}
                     alt={post.content}
                     layout="fill"
                     objectFit="cover"
