@@ -20,26 +20,13 @@ const PostsList = () => {
 
   const getPosts = async () => {
     try {
-      const response = await axiosClient.get("/users");
-      const usersData = response.data;
-      setUsers(usersData);
+      const response = await axiosClient.get("/posts");
+      const userResponse = await axiosClient.get("/users");
+      const usersData = userResponse.data;
+      const postsData = response.data;
 
-      const allPosts = usersData.flatMap((user: User) =>
-        user.posts.map((post) => ({
-          ...post,
-          user: {
-            id: user.id,
-            name: user.name,
-            image: user.image,
-            username: user.username,
-          },
-        }))
-      );
-      allPosts.sort(
-        (a: Post, b: Post) =>
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-      );
-      setPosts(allPosts);
+      setPosts(postsData);
+      setUsers(usersData);
     } catch (error: unknown) {
       setError("Error fetching posts - " + (error as Error).message);
     } finally {
