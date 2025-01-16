@@ -80,8 +80,12 @@ const Menu = ({ user }: MenuProps) => {
                   "border-2 border-white": pathename === `/${user.username}`,
                 })}
               >
-                <AvatarImage src={user.image} />
-                <AvatarFallback>{user.name.slice(0, 2)}</AvatarFallback>
+                <AvatarImage
+                  src={user.image || "/usuario-sem-foto-de-perfil.jpg"}
+                />
+                <AvatarFallback>
+                  <div className="flex-grow bg-slate-500 animate-pulse"></div>
+                </AvatarFallback>
               </Avatar>
               <span className="text-lg">Profile</span>
             </Link>
