@@ -1,10 +1,11 @@
 import { Like } from "./Likes";
 import { Comment } from "./Comments";
 import { User } from "./Users";
+import { Image } from "./Images";
 
 export type Post = {
   id: string;
-  image_url: string;
+  images: Image[];
   content: string;
   created_at: string;
   likes: Array<Like>;
