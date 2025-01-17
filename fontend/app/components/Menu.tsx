@@ -16,6 +16,8 @@ import {
 import { usePathname } from "next/navigation";
 import { cn } from "../lib/utils";
 import { useAuth } from "../context/authContext";
+import { useState, useEffect } from "react";
+import CreatePostForm from "./CreatePostForm";
 
 interface MenuProps {
   user: Pick<User, "id" | "name" | "image" | "username"> | null;
@@ -24,6 +26,26 @@ interface MenuProps {
 const Menu = ({ user }: MenuProps) => {
   const pathename = usePathname();
   const { logout } = useAuth();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    const handleProfileUpdate = (event: CustomEvent<{ username: string }>) => {
+      if (event.detail.username === user?.username) {
+      }
+    };
+
+    window.addEventListener(
+      "profileUpdate",
+      handleProfileUpdate as EventListener
+    );
+
+    return () => {
+      window.removeEventListener(
+        "profileUpdate",
+        handleProfileUpdate as EventListener
+      );
+    };
+  }, [user]);
 
   const links = [
     { href: "/", icon: Home, label: "Feed" },
@@ -64,10 +86,17 @@ const Menu = ({ user }: MenuProps) => {
             <Button
               variant={"link"}
               className="hover:no-underline text-white font-light opacity-90 flex justify-start items-center px-0 gap-6"
+              id="create-post"
+              onClick={() => setIsModalOpen(true)}
             >
               <PlusSquare className="!h-8 !w-8" />
               <span className="!text-lg">Create</span>
             </Button>
+            <CreatePostForm
+              open={isModalOpen}
+              onOpenChange={setIsModalOpen}
+              onPostCreated={() => setIsModalOpen(false)}
+            />
             <Link
               href={`/${user.username}`}
               className={cn("flex items-center gap-6 transition-colors", {
@@ -75,18 +104,35 @@ const Menu = ({ user }: MenuProps) => {
                 "font-light opacity-90": pathename !== `/${user.username}`,
               })}
             >
-              <Avatar
-                className={cn("h-8 w-8", {
-                  "border-2 border-white": pathename === `/${user.username}`,
-                })}
-              >
-                <AvatarImage
-                  src={user.image || "/usuario-sem-foto-de-perfil.jpg"}
-                />
-                <AvatarFallback>
-                  <div className="flex-grow bg-slate-500 animate-pulse"></div>
-                </AvatarFallback>
-              </Avatar>
+              {user.image !== "" ? (
+                <Avatar
+                  className={cn("h-8 w-8", {
+                    "border-2 border-white": pathename === `/${user.username}`,
+                  })}
+                >
+                  <AvatarImage
+                    src={`http://localhost:8080/uploads/avatar/${user.image}`}
+                    className="object-cover"
+                  />
+                  <AvatarFallback>
+                    <div className="flex-grow bg-slate-500 animate-pulse"></div>
+                  </AvatarFallback>
+                </Avatar>
+              ) : (
+                <Avatar
+                  className={cn("h-8 w-8", {
+                    "border-2 border-white": pathename === `/${user.username}`,
+                  })}
+                >
+                  <AvatarImage
+                    src={"/usuario-sem-foto-de-perfil.jpg"}
+                    className="object-cover"
+                  />
+                  <AvatarFallback>
+                    <div className="flex-grow bg-slate-500 animate-pulse"></div>
+                  </AvatarFallback>
+                </Avatar>
+              )}
               <span className="text-lg">Profile</span>
             </Link>
           </nav>
@@ -98,6 +144,7 @@ const Menu = ({ user }: MenuProps) => {
             onClick={logout}
             title="Logout"
           >
+            {" "}
             <LogOut className="!h-6 !w-6" />
             <span className="!text-lg">Logout</span>
           </Button>
