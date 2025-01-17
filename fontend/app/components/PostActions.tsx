@@ -2,7 +2,6 @@ import { Button } from "./ui/button";
 import { HeartIcon, MessageCircle, Send } from "lucide-react";
 import { Post } from "../types/Posts";
 import { User } from "../types/Users";
-import Image from "next/image";
 import {
   Dialog,
   DialogContent,
@@ -10,21 +9,37 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
+import { useAuth } from "../context/authContext";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 interface PostActionsProps {
   post: Post;
   users: User[];
+  onLike: () => void;
 }
 
-const PostActions: React.FC<PostActionsProps> = ({ post, users }) => {
+const PostActions: React.FC<PostActionsProps> = ({ post, users, onLike }) => {
+  const { user } = useAuth();
+  const hasLiked = user
+    ? post.likes.some((like) => like.user_id === user.id)
+    : false;
+
   return (
     <div className="flex flex-col mt-1">
       <div className="space-x-4">
         <Button
           variant="link"
-          className="hover:text-red-500 px-0 hover:no-underline"
+          className={`hover:text-red-500 px-0 hover:no-underline transition-all ${
+            hasLiked ? "text-red-500" : ""
+          }`}
+          id="like-button"
+          onClick={onLike}
         >
-          <HeartIcon className="!w-5 !h-5" />
+          <HeartIcon
+            className={`!w-5 !h-5 transition-all ${
+              hasLiked ? "fill-red-600" : ""
+            }`}
+          />
         </Button>
         <Button
           variant="link"
@@ -35,6 +50,7 @@ const PostActions: React.FC<PostActionsProps> = ({ post, users }) => {
         <Button
           variant="link"
           className="hover:text-green-500 px-0 hover:no-underline"
+          disabled
         >
           <Send className="!w-5 !h-5" />
         </Button>
@@ -55,15 +71,29 @@ const PostActions: React.FC<PostActionsProps> = ({ post, users }) => {
                         (user) => user.id === like.user_id
                       );
                       return (
-                        <Image
-                          key={index}
-                          src={user?.image || "/usuario-sem-foto-de-perfil.jpg"}
-                          alt="user image"
-                          width={20}
-                          height={20}
-                          className="rounded-full border-2 border-black"
-                          style={{ zIndex: 3 - index }}
-                        />
+                        <div key={index} className="like-item">
+                          {user?.image !== "" ? (
+                            <Avatar key={user?.id} className="h-6 w-6">
+                              <AvatarImage
+                                src={`http://localhost:8080/uploads/avatar/${user?.image}`}
+                                className="object-cover"
+                              />
+                              <AvatarFallback>
+                                <div className="flex-grow bg-slate-500 animate-pulse"></div>
+                              </AvatarFallback>
+                            </Avatar>
+                          ) : (
+                            <Avatar className="h-6 w-6">
+                              <AvatarImage
+                                src={"/usuario-sem-foto-de-perfil.jpg"}
+                                className="object-cover"
+                              />
+                              <AvatarFallback>
+                                <div className="flex-grow bg-slate-500 animate-pulse"></div>
+                              </AvatarFallback>
+                            </Avatar>
+                          )}
+                        </div>
                       );
                     })}
                   </div>
@@ -91,15 +121,28 @@ const PostActions: React.FC<PostActionsProps> = ({ post, users }) => {
                       key={like.id}
                       className="flex items-center space-x-3 py-2 hover:bg-white/10 transition-all rounded-lg"
                     >
-                      <Image
-                        src={
-                          `${user?.image}` || "/usuario-sem-foto-de-perfil.jpg"
-                        }
-                        alt="user image"
-                        width={30}
-                        height={30}
-                        className="rounded-full"
-                      />
+                      {user?.image !== "" ? (
+                        <Avatar className="h-6 w-6">
+                          <AvatarImage
+                            src={`http://localhost:8080/uploads/avatar/${user?.image}`}
+                            className="object-cover"
+                          />
+                          <AvatarFallback>
+                            <div className="flex-grow bg-slate-500 animate-pulse"></div>
+                          </AvatarFallback>
+                        </Avatar>
+                      ) : (
+                        <Avatar className="h-6 w-6">
+                          <AvatarImage
+                            src={"/usuario-sem-foto-de-perfil.jpg"}
+                            className="object-cover"
+                          />
+                          <AvatarFallback>
+                            <div className="flex-grow bg-slate-500 animate-pulse"></div>
+                          </AvatarFallback>
+                        </Avatar>
+                      )}
+
                       <p className="font-semibold">{user?.username}</p>
                     </div>
                   );
