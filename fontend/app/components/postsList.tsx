@@ -1,122 +1,32 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import axiosClient from "../services/axiosClient";
+import { useApi } from "../hooks/useApi";
 import Image from "next/image";
-import { User } from "../types/Users";
-import { Post } from "../types/Posts";
 import PostItem from "./PostItem";
 import PostSkeleton from "./PostSkeleton";
 import CreatePostForm from "./CreatePostForm";
 import { Button } from "./ui/button";
+import { Post } from "../types/Posts";
 
 const PostsList = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [users, setUsers] = useState<User[]>([]);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true);
+  const {
+    posts,
+    users,
+    error,
+    loading,
+    getPosts,
+    createComment,
+    toggleLike,
+    deletePost,
+  } = useApi();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newPostCreated, setNewPostCreated] = useState(false);
   const [newPosts, setNewPosts] = useState<Post[]>([]);
 
   useEffect(() => {
     getPosts();
-  }, []);
-
-  const getPosts = async () => {
-    try {
-      const response = await axiosClient.get("/posts");
-      const userResponse = await axiosClient.get("/users");
-      const usersData = userResponse.data;
-      const postsData = response.data;
-
-      setPosts(postsData);
-      setUsers(usersData);
-    } catch (error: unknown) {
-      setError("Error fetching posts - " + (error as Error).message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const createComment = async (
-    postId: string,
-    authorId: string,
-    content: string
-  ) => {
-    try {
-      const response = await axiosClient.post("/comments", {
-        post_id: postId,
-        author_id: authorId,
-        content: content,
-      });
-      const newComment = response.data;
-
-      setPosts((prevPosts) =>
-        prevPosts.map((post) =>
-          post.id === postId
-            ? { ...post, comments: [...post.comments, newComment] }
-            : post
-        )
-      );
-    } catch (error: unknown) {
-      setError("Error creating comment - " + (error as Error).message);
-    }
-  };
-
-  const toggleLike = async (postId: string, userId: string) => {
-    try {
-      const post = posts.find((post) => post.id === postId);
-      if (!post) return;
-
-      const hasLiked = post.likes.some((like) => like.user_id === userId);
-
-      if (hasLiked) {
-        await axiosClient.delete("/likes", {
-          data: {
-            post_id: postId,
-            user_id: userId,
-          },
-        });
-        setPosts((prevPosts) =>
-          prevPosts.map((post) =>
-            post.id === postId
-              ? {
-                  ...post,
-                  likes: post.likes.filter((like) => like.user_id !== userId),
-                }
-              : post
-          )
-        );
-      } else {
-        const response = await axiosClient.post("/likes", {
-          post_id: postId,
-          user_id: userId,
-        });
-        const newLike = response.data;
-
-        setPosts((prevPosts) =>
-          prevPosts.map((post) =>
-            post.id === postId
-              ? { ...post, likes: [...post.likes, newLike] }
-              : post
-          )
-        );
-      }
-    } catch (error: unknown) {
-      setError("Error toggling like - " + (error as Error).message);
-    }
-  };
-
-  const deletePost = async (postId: string) => {
-    try {
-      await axiosClient.delete(`/posts/${postId}`);
-      setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
-      getPosts();
-    } catch (error: unknown) {
-      setError("Error deleting post - " + (error as Error).message);
-    }
-  };
+  }, [getPosts]);
 
   const handlePostCreated = (newPost: Post) => {
     setNewPosts((prevPosts) => [newPost, ...prevPosts]);
@@ -153,7 +63,7 @@ const PostsList = () => {
         <Button
           className="fixed bottom-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-full shadow-lg"
           onClick={() => {
-            setPosts((prevPosts) => [...newPosts, ...prevPosts]);
+            getPosts();
             setNewPosts([]);
             setNewPostCreated(false);
           }}
@@ -162,6 +72,9 @@ const PostsList = () => {
         </Button>
       )}
       <section className="space-y-6 w-full flex flex-col items-center max-w-3xl mx-auto">
+        {newPosts.map((post) => (
+          <PostSkeleton key={post.id} />
+        ))}
         {posts.length > 0 ? (
           posts.map((post) => (
             <PostItem

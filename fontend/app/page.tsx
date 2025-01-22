@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import PostsList from "./components/PostsList";
 import { useAuth } from "./context/authContext";
 import { useEffect, useState } from "react";
-import axiosClient from "./services/axiosClient";
+import { useApi } from "./hooks/useApi";
 import { User } from "./types/Users";
 import { Avatar, AvatarFallback, AvatarImage } from "./components/ui/avatar";
 import Link from "next/link";
@@ -15,26 +15,19 @@ export default function Home() {
   const router = useRouter();
   const [userLogged, setUserLogged] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const { getUserByUsername } = useApi();
 
   useEffect(() => {
     if (!user) {
       router.push("/login");
+      return;
     }
 
-    axiosClient
-      .get(`/users?username=${user?.username}`)
-      .then((response) => {
-        const userData = Array.isArray(response.data)
-          ? response.data[0]
-          : response.data;
-        setUserLogged(userData);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error(error);
-        setLoading(false);
-      });
-  }, [user, router]);
+    getUserByUsername(user.username).then((data) => {
+      setUserLogged(data);
+      setLoading(false);
+    });
+  });
 
   useEffect(() => {
     interface ProfileUpdateEvent extends Event {

@@ -16,6 +16,7 @@ import {
 } from "../components/ui/dialog";
 import { Input } from "../components/ui/input";
 import { useToast } from "../hooks/use-toast";
+import { useApi } from "../hooks/useApi";
 
 export default function ClientPage({ username }: { username: string }) {
   const [userF, setUserF] = useState<User>();
@@ -27,35 +28,22 @@ export default function ClientPage({ username }: { username: string }) {
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [error, setError] = useState("");
   const { toast } = useToast();
+  const { getUserByUsername } = useApi();
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const userResponse = await axiosClient.get(
-          `/users?username=${username}`
-        );
-        const userData = Array.isArray(userResponse.data)
-          ? userResponse.data[0]
-          : userResponse.data;
-
-        const postsResponse = await axiosClient.get(
-          `/posts?user_id=${userData.id}`
-        );
-        const postsData = postsResponse.data;
-
-        setUserF({ ...userData, posts: postsData });
-        setName(userData.name);
-        setNewUsername(userData.username);
-        console.log({ ...userData, posts: postsData });
+        const userData = await getUserByUsername(username, true);
+        setUserF(userData);
         setLoading(false);
       } catch (error) {
-        console.error(error);
+        setError("Erro ao buscar usuário - " + (error as Error).message);
         setLoading(false);
       }
     };
 
     fetchUserData();
-  }, [username]);
+  }, [username, getUserByUsername]);
 
   const handleEditProfile = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,7 +79,7 @@ export default function ClientPage({ username }: { username: string }) {
       window.dispatchEvent(
         new CustomEvent("profileUpdate", { detail: updatedUser })
       );
-      updateUser(updatedUser); // Atualiza os dados do usuário no contexto de autenticação
+      updateUser(updatedUser);
     } catch (error: unknown) {
       setError("Erro ao editar perfil - " + (error as Error).message);
     }
