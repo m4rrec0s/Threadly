@@ -5,9 +5,10 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import { Post } from "../types/Posts";
 
 interface CreatePostFormProps {
-  onPostCreated: () => void;
+  onPostCreated: (newPost: Post) => void;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
@@ -37,15 +38,16 @@ const CreatePostForm: React.FC<CreatePostFormProps> = ({
     }
 
     try {
-      await axiosClient.post("/posts", formData, {
+      const response = await axiosClient.post("/posts", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
+      const newPost = response.data;
       setContent("");
       setImage(null);
       setError("");
-      onPostCreated(); // Notifica o componente pai
+      onPostCreated(newPost);
     } catch (error: unknown) {
       setError("Erro ao criar post - " + (error as Error).message);
     }
@@ -67,7 +69,7 @@ const CreatePostForm: React.FC<CreatePostFormProps> = ({
             />
             <Input
               type="file"
-              accept="image/*"
+              accept="image/png,image/jpeg,image/jpg,image/gif"
               onChange={(e) =>
                 setImage(e.target.files ? e.target.files[0] : null)
               }
