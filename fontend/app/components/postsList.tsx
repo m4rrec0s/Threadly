@@ -8,6 +8,7 @@ import { Post } from "../types/Posts";
 import PostItem from "./PostItem";
 import PostSkeleton from "./PostSkeleton";
 import CreatePostForm from "./CreatePostForm";
+import { Button } from "./ui/button";
 
 const PostsList = () => {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -15,6 +16,8 @@ const PostsList = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newPostCreated, setNewPostCreated] = useState(false);
+  const [newPosts, setNewPosts] = useState<Post[]>([]);
 
   useEffect(() => {
     getPosts();
@@ -105,8 +108,19 @@ const PostsList = () => {
     }
   };
 
-  const handlePostCreated = () => {
-    getPosts();
+  const deletePost = async (postId: string) => {
+    try {
+      await axiosClient.delete(`/posts/${postId}`);
+      setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
+      getPosts();
+    } catch (error: unknown) {
+      setError("Error deleting post - " + (error as Error).message);
+    }
+  };
+
+  const handlePostCreated = (newPost: Post) => {
+    setNewPosts((prevPosts) => [newPost, ...prevPosts]);
+    setNewPostCreated(true);
   };
 
   if (loading) {
@@ -135,6 +149,18 @@ const PostsList = () => {
         open={isModalOpen}
         onOpenChange={setIsModalOpen}
       />
+      {newPostCreated && (
+        <Button
+          className="fixed bottom-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-full shadow-lg"
+          onClick={() => {
+            setPosts((prevPosts) => [...newPosts, ...prevPosts]);
+            setNewPosts([]);
+            setNewPostCreated(false);
+          }}
+        >
+          Novas publicações
+        </Button>
+      )}
       <section className="space-y-6 w-full flex flex-col items-center max-w-3xl mx-auto">
         {posts.length > 0 ? (
           posts.map((post) => (
@@ -144,6 +170,7 @@ const PostsList = () => {
               users={users}
               createComment={createComment}
               toggleLike={toggleLike}
+              deletePost={deletePost}
             />
           ))
         ) : (

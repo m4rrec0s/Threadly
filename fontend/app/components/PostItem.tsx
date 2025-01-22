@@ -1,3 +1,5 @@
+"use client";
+
 import { Post } from "../types/Posts";
 import { User } from "../types/Users";
 import { dateConvert } from "../helpers/dateConvert";
@@ -17,12 +19,24 @@ import {
 import { Button } from "./ui/button";
 import { EllipsisVerticalIcon } from "lucide-react";
 import { useAuth } from "../context/authContext";
+import { useState } from "react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "./ui/alert-dialog";
 
 interface PostItemProps {
   post: Post;
   users: User[];
   createComment: (postId: string, authorId: string, content: string) => void;
   toggleLike: (postId: string, userId: string) => void;
+  deletePost: (postId: string) => void;
 }
 
 const PostItem: React.FC<PostItemProps> = ({
@@ -30,13 +44,19 @@ const PostItem: React.FC<PostItemProps> = ({
   users,
   createComment,
   toggleLike,
+  deletePost,
 }) => {
   const { user } = useAuth();
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
 
   const handleToggleLike = () => {
     if (user) {
       toggleLike(post.id, user.id);
     }
+  };
+
+  const handleDeletePost = () => {
+    deletePost(post.id);
   };
 
   return (
@@ -86,12 +106,25 @@ const PostItem: React.FC<PostItemProps> = ({
             </DropdownMenuItem>
 
             <DropdownMenuItem>
-              <Button
-                variant={"link"}
-                className="w-full text-red-600 py-0 px-0 m-0 text-left justify-start hover:no-underline gap-0"
-              >
-                Denunciar
-              </Button>
+              {user?.id !== post.user.id && (
+                <Button
+                  variant={"link"}
+                  className="w-full text-red-600 py-0 px-0 m-0 text-left justify-start hover:no-underline gap-0"
+                >
+                  Denunciar
+                </Button>
+              )}
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              {user?.id === post.user.id && (
+                <Button
+                  variant={"link"}
+                  className="w-full text-red-600 py-0 px-0 m-0 text-left justify-start hover:no-underline gap-0"
+                  onClick={() => setIsAlertOpen(true)}
+                >
+                  Excluir
+                </Button>
+              )}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -120,6 +153,25 @@ const PostItem: React.FC<PostItemProps> = ({
       </div>
 
       <PostComments post={post} users={users} createComment={createComment} />
+
+      {isAlertOpen && (
+        <AlertDialog open onOpenChange={() => setIsAlertOpen(false)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Excluir postagem?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Você tem certeza que deseja excluir essa postagem?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <AlertDialogAction onClick={() => handleDeletePost()}>
+                Continuar
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
     </div>
   );
 };
