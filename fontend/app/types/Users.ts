@@ -1,4 +1,5 @@
 import { Post } from "./Posts";
+import { Follow } from "./Follows";
 
 export type User = {
   id: string;
@@ -8,4 +9,6 @@ export type User = {
   name: string;
   image: string;
   posts: Post[];
+  followers: Follow[];
+  following: Follow[];
 };
