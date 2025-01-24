@@ -2,6 +2,7 @@ import { useState } from "react";
 import axiosClient from "../services/axiosClient";
 import { User } from "../types/Users";
 import { Post } from "../types/Posts";
+import { Follow } from "../types/Follows";
 
 export const useApi = () => {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -59,6 +60,65 @@ export const useApi = () => {
       );
     } catch (error: unknown) {
       setError("Error creating comment - " + (error as Error).message);
+    }
+  };
+
+  const deleteComment = async (commentId: string) => {
+    try {
+      await axiosClient.delete(`/comments/${commentId}`);
+      setPosts((prevPosts) =>
+        prevPosts.map((post) => ({
+          ...post,
+          comments: post.comments.filter((comment) => comment.id !== commentId),
+        }))
+      );
+    } catch (error: unknown) {
+      setError("Error deleting comment - " + (error as Error).message);
+    }
+  };
+
+  const createAnswer = async (
+    commentId: string,
+    authorId: string,
+    content: string
+  ) => {
+    try {
+      const response = await axiosClient.post("/answers", {
+        comment_id: commentId,
+        author_id: authorId,
+        content: content,
+      });
+      const newAnswer = response.data;
+
+      setPosts((prevPosts) =>
+        prevPosts.map((post) => ({
+          ...post,
+          comments: post.comments.map((comment) =>
+            comment.id === commentId
+              ? { ...comment, answers: [...comment.answers, newAnswer] }
+              : comment
+          ),
+        }))
+      );
+    } catch (error: unknown) {
+      setError("Error creating answer - " + (error as Error).message);
+    }
+  };
+
+  const deleteAnswer = async (answerId: string) => {
+    try {
+      await axiosClient.delete(`/answers/${answerId}`);
+      setPosts((prevPosts) =>
+        prevPosts.map((post) => ({
+          ...post,
+          comments: post.comments.map((comment) => ({
+            ...comment,
+            answers: comment.answers.filter((answer) => answer.id !== answerId),
+          })),
+        }))
+      );
+    } catch (error: unknown) {
+      setError("Error deleting answer - " + (error as Error).message);
     }
   };
 
@@ -150,6 +210,50 @@ export const useApi = () => {
     }
   };
 
+  const getFollowers = async (userId: string) => {
+    try {
+      const response = await axiosClient.get(`/followers/${userId}`);
+      return response.data as Follow[];
+    } catch (error: unknown) {
+      setError("Error fetching followers - " + (error as Error).message);
+      throw error;
+    }
+  };
+
+  const getFollowing = async (userId: string) => {
+    try {
+      const response = await axiosClient.get(`/following/${userId}`);
+      return response.data as Follow[];
+    } catch (error: unknown) {
+      setError("Error fetching following - " + (error as Error).message);
+      throw error;
+    }
+  };
+
+  const followUser = async (followerId: string, followingId: string) => {
+    try {
+      await axiosClient.post("/follow", {
+        follower_id: followerId,
+        following_id: followingId,
+      });
+    } catch (error: unknown) {
+      setError("Error following user - " + (error as Error).message);
+      throw error;
+    }
+  };
+
+  const unFollowUser = async (followerId: string, followingId: string) => {
+    try {
+      await axiosClient.post("/unfollow", {
+        follower_id: followerId,
+        following_id: followingId,
+      });
+    } catch (error: unknown) {
+      setError("Error unfollowing user - " + (error as Error).message);
+      throw error;
+    }
+  };
+
   return {
     posts,
     users,
@@ -158,9 +262,16 @@ export const useApi = () => {
     getPosts,
     getPostByUser,
     createComment,
+    deleteComment,
+    createAnswer,
+    deleteAnswer,
     toggleLike,
     deletePost,
     createPost,
     getUserByUsername,
+    getFollowers,
+    getFollowing,
+    followUser,
+    unFollowUser,
   };
 };
