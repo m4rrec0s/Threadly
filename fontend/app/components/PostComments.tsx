@@ -1,6 +1,6 @@
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { SendIcon } from "lucide-react";
+import { MoreVerticalIcon, SendIcon } from "lucide-react";
 import { Post } from "../types/Posts";
 import { User } from "../types/Users";
 import { dateConvert } from "../helpers/dateConvert";
@@ -14,29 +14,54 @@ import {
 import { useState } from "react";
 import { useAuth } from "../context/authContext";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 interface PostCommentsProps {
   post: Post;
   users: User[];
   createComment: (postId: string, authorId: string, content: string) => void;
+  deleteComment: (commentId: string) => void;
+  createAnswer: (commentId: string, authorId: string, content: string) => void;
 }
 
 const PostComments: React.FC<PostCommentsProps> = ({
   post,
   users,
   createComment,
+  deleteComment,
+  createAnswer,
 }) => {
   const { user } = useAuth();
   const [commentContent, setCommentContent] = useState("");
+  const [replyTo, setReplyTo] = useState<User | null>(null);
+
+  const handleReply = (user: User) => {
+    setReplyTo(user);
+    setCommentContent(`@${user.username} `);
+  };
 
   const handleCreateComment = (e: React.FormEvent) => {
     e.preventDefault();
     if (commentContent.trim() && user) {
-      createComment(post.id, user.id, commentContent);
+      if (replyTo) {
+        createAnswer(replyTo.id, user.id, commentContent);
+        setReplyTo(null);
+      } else {
+        createComment(post.id, user.id, commentContent);
+      }
       setCommentContent("");
     } else {
       console.log("Comentário vazio");
     }
+  };
+
+  const handleDeleteComment = (commentId: string) => {
+    deleteComment(commentId);
   };
 
   return (
@@ -105,48 +130,72 @@ const PostComments: React.FC<PostCommentsProps> = ({
               );
 
               return (
-                <div key={comment.id}>
-                  <div className="mt-3 flex items-center space-x-2">
-                    {userComment?.image !== "" ? (
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage
-                          src={`http://localhost:8080/uploads/avatar/${userComment?.image}`}
-                          className="object-cover"
-                        />
-                        <AvatarFallback>
-                          <div className="flex-grow bg-slate-500 animate-pulse"></div>
-                        </AvatarFallback>
-                      </Avatar>
-                    ) : (
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage
-                          src={"/usuario-sem-foto-de-perfil.jpg"}
-                          className="object-cover"
-                        />
-                        <AvatarFallback>
-                          <div className="flex-grow bg-slate-500 animate-pulse"></div>
-                        </AvatarFallback>
-                      </Avatar>
-                    )}
-                    <div className="flex flex-col">
-                      <p>
-                        <span className="font-semibold text-base">
-                          {userComment?.username}
-                        </span>{" "}
-                        {comment.content}
-                      </p>
-                      <div className="flex items-center space-x-2">
-                        <span className="text-xs text-gray-500">
-                          {dateConvert(comment.created_at)}
-                        </span>
-                        <Button
-                          variant={"link"}
-                          className="p-0 hover:no-underline"
-                        >
-                          Responder
-                        </Button>
+                <div key={comment.id} className="">
+                  <div className="flex items-center justify-between">
+                    <div className="mt-3 flex items-center space-x-2">
+                      {userComment?.image !== "" ? (
+                        <Avatar className="h-8 w-8">
+                          <AvatarImage
+                            src={`http://localhost:8080/uploads/avatar/${userComment?.image}`}
+                            className="object-cover"
+                          />
+                          <AvatarFallback>
+                            <div className="flex-grow bg-slate-500 animate-pulse"></div>
+                          </AvatarFallback>
+                        </Avatar>
+                      ) : (
+                        <Avatar className="h-8 w-8">
+                          <AvatarImage
+                            src={"/usuario-sem-foto-de-perfil.jpg"}
+                            className="object-cover"
+                          />
+                          <AvatarFallback>
+                            <div className="flex-grow bg-slate-500 animate-pulse"></div>
+                          </AvatarFallback>
+                        </Avatar>
+                      )}
+                      <div className="flex flex-col">
+                        <p>
+                          <span className="font-semibold text-base">
+                            {userComment?.username}
+                          </span>{" "}
+                          {comment.content}
+                        </p>
+                        <div className="flex items-center space-x-2">
+                          <span className="text-xs text-gray-500">
+                            {dateConvert(comment.created_at)}
+                          </span>
+                          <Button
+                            variant={"link"}
+                            className="p-0 hover:no-underline"
+                            onClick={() =>
+                              userComment && handleReply(userComment)
+                            }
+                          >
+                            Responder
+                          </Button>
+                        </div>
                       </div>
                     </div>
+                    {user?.id === comment.author_id && (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="link"
+                            className="text-gray-500 hover:text-gray-700"
+                          >
+                            <MoreVerticalIcon size={30} />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          <DropdownMenuItem
+                            onClick={() => handleDeleteComment(comment.id)}
+                          >
+                            Deletar
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
                   </div>
 
                   {comment.answers &&
@@ -157,7 +206,7 @@ const PostComments: React.FC<PostCommentsProps> = ({
                       return (
                         <div
                           key={answer.id}
-                          className="mt-3 flex items-center space-x-2"
+                          className="ml-5 mt-3 flex items-center space-x-2"
                         >
                           {userAnswers?.image !== "" ? (
                             <Avatar className="w-8 h-8">
@@ -194,6 +243,9 @@ const PostComments: React.FC<PostCommentsProps> = ({
                               <Button
                                 variant={"link"}
                                 className="p-0 hover:no-underline"
+                                onClick={() =>
+                                  userAnswers && handleReply(userAnswers)
+                                }
                               >
                                 Responder
                               </Button>
@@ -210,6 +262,25 @@ const PostComments: React.FC<PostCommentsProps> = ({
                 <h3 className="text-sm text-gray-400">
                   Ainda não há nenhum comentário
                 </h3>
+              </div>
+            )}
+
+            {replyTo && (
+              <div className="bg-gray-800 p-2 rounded-md mb-0 w-full flex items-center justify-between">
+                <p>
+                  Respondendo a{" "}
+                  <span className="font-semibold">@{replyTo.username}</span>
+                </p>
+                <Button
+                  variant="link"
+                  onClick={() => {
+                    setReplyTo(null);
+                    setCommentContent("");
+                  }}
+                  className="ml-2"
+                >
+                  Cancelar
+                </Button>
               </div>
             )}
 

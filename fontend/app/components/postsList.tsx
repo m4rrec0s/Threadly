@@ -17,6 +17,8 @@ const PostsList = () => {
     loading,
     getPosts,
     createComment,
+    deleteComment,
+    createAnswer,
     toggleLike,
     deletePost,
   } = useApi();
@@ -82,8 +84,10 @@ const PostsList = () => {
               post={post}
               users={users}
               createComment={createComment}
+              deleteComment={deleteComment}
               toggleLike={toggleLike}
               deletePost={deletePost}
+              createAnswer={createAnswer}
             />
           ))
         ) : (

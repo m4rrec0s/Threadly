@@ -35,6 +35,8 @@ interface PostItemProps {
   post: Post;
   users: User[];
   createComment: (postId: string, authorId: string, content: string) => void;
+  deleteComment: (commentId: string) => void;
+  createAnswer: (commentId: string, authorId: string, content: string) => void;
   toggleLike: (postId: string, userId: string) => void;
   deletePost: (postId: string) => void;
 }
@@ -43,8 +45,10 @@ const PostItem: React.FC<PostItemProps> = ({
   post,
   users,
   createComment,
+  deleteComment,
   toggleLike,
   deletePost,
+  createAnswer,
 }) => {
   const { user } = useAuth();
   const [isAlertOpen, setIsAlertOpen] = useState(false);
@@ -152,7 +156,13 @@ const PostItem: React.FC<PostItemProps> = ({
         </div>
       </div>
 
-      <PostComments post={post} users={users} createComment={createComment} />
+      <PostComments
+        post={post}
+        users={users}
+        createComment={createComment}
+        deleteComment={deleteComment}
+        createAnswer={createAnswer}
+      />
 
       {isAlertOpen && (
         <AlertDialog open onOpenChange={() => setIsAlertOpen(false)}>
