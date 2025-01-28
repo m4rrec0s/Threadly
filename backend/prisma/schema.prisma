@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id         String    @id @default(uuid())
+  username   String    @unique
+  password   String
+  email      String    @unique
+  name       String?
+  image      String?
+  created_at DateTime  @default(now())
+  posts      Post[]
+  likes      Like[]
+  comments   Comment[]
+  followers  Follow[]  @relation("following")
+  following  Follow[]  @relation("follower")
+  Answer     Answer[]
+}
+
+model Follow {
+  follower     User   @relation("follower", fields: [follower_id], references: [id])
+  follower_id  String
+  following    User   @relation("following", fields: [following_id], references: [id])
+  following_id String
+
+  @@id([follower_id, following_id])
+  @@unique([follower_id, following_id])
+}
+
+model Post {
+  id         String    @id @default(uuid())
+  images     Image[]
+  content    String?
+  created_at DateTime  @default(now())
+  likes      Like[]
+  comments   Comment[]
+  user       User      @relation(fields: [user_id], references: [id])
+  user_id    String
+}
+
+model Like {
+  id         String   @id @default(uuid())
+  post_id    String
+  user       User     @relation(fields: [user_id], references: [id])
+  user_id    String
+  post       Post     @relation(fields: [post_id], references: [id], onDelete: Cascade)
+  created_at DateTime @default(now())
+}
+
+model Comment {
+  id         String   @id @default(uuid())
+  content    String
+  post       Post     @relation(fields: [post_id], references: [id], onDelete: Cascade)
+  post_id    String
+  user       User     @relation(fields: [author_id], references: [id])
+  author_id  String
+  answers    Answer[]
+  created_at DateTime @default(now())
+}
+
+model Answer {
+  id         String   @id @default(uuid())
+  content    String
+  comment    Comment  @relation(fields: [comment_id], references: [id], onDelete: Cascade)
+  comment_id String
+  user       User     @relation(fields: [author_id], references: [id])
+  author_id  String
+  created_at DateTime @default(now())
+}
+
+model Image {
+  id         String   @id @default(uuid())
+  url        String
+  post       Post     @relation(fields: [post_id], references: [id], onDelete: Cascade)
+  post_id    String
+  created_at DateTime @default(now())
+}
