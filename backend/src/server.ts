@@ -1,27 +1,17 @@
-import jsonServer from "json-server";
-import registerController from "./controllers/registerController";
-import loginController from "./controllers/loginController";
-import { authMiddleware } from "./middlewares/authMiddlewares";
+import express from "express";
+import { router } from "./routes";
+import path from "path";
+import cors from "cors";
 
-const databasePath = "api.json";
+const app = express();
 const port = 8080;
 
-const server = jsonServer.create();
-const router = jsonServer.router(databasePath);
+app.use(cors({ origin: "http://localhost:3000" }));
+app.use(express.json());
+app.use(router);
 
-server.use(
-  jsonServer.defaults({
-    bodyParser: true,
-  })
-);
+app.use("/uploads", express.static(path.resolve(__dirname, "..", "uploads")));
 
-server.post("/register", registerController);
-server.post("/login", loginController);
-
-// server.use(authMiddleware);
-
-server.use(router);
-
-server.listen(port, () => {
-  console.log("Server running on port", port);
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
