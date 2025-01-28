@@ -16,11 +16,13 @@ const PostsList = () => {
     error,
     loading,
     getPosts,
+    getPostById,
     createComment,
     deleteComment,
     createAnswer,
     toggleLike,
     deletePost,
+    setPosts, // Adicionei setPosts aqui
   } = useApi();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newPostCreated, setNewPostCreated] = useState(false);
@@ -28,11 +30,21 @@ const PostsList = () => {
 
   useEffect(() => {
     getPosts();
-  }, [getPosts]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handlePostCreated = (newPost: Post) => {
     setNewPosts((prevPosts) => [newPost, ...prevPosts]);
     setNewPostCreated(true);
+  };
+
+  const handlePostUpdated = (updatedPost: Post) => {
+    setNewPosts((prevPosts) =>
+      prevPosts.map((post) => (post.id === updatedPost.id ? updatedPost : post))
+    );
+    setPosts((prevPosts) =>
+      prevPosts.map((post) => (post.id === updatedPost.id ? updatedPost : post))
+    );
   };
 
   if (loading) {
@@ -88,6 +100,8 @@ const PostsList = () => {
               toggleLike={toggleLike}
               deletePost={deletePost}
               createAnswer={createAnswer}
+              onPostUpdated={handlePostUpdated}
+              getPostById={getPostById}
             />
           ))
         ) : (

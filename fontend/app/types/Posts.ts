@@ -10,5 +10,6 @@ export type Post = {
   created_at: string;
   likes: Array<Like>;
   comments: Array<Comment>;
+  commentCount: number;
   user: Pick<User, "id" | "name" | "image" | "username">;
 };

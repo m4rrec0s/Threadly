@@ -2,7 +2,6 @@
 
 import { Post } from "../types/Posts";
 import { User } from "../types/Users";
-import { dateConvert } from "../helpers/dateConvert";
 import PostActions from "./PostActions";
 import PostComments from "./PostComments";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -30,6 +29,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "./ui/alert-dialog";
+import { dateConvert } from "../helpers/dateConvert";
 
 interface PostItemProps {
   post: Post;
@@ -39,6 +39,8 @@ interface PostItemProps {
   createAnswer: (commentId: string, authorId: string, content: string) => void;
   toggleLike: (postId: string, userId: string) => void;
   deletePost: (postId: string) => void;
+  onPostUpdated: (post: Post) => void;
+  getPostById: (postId: string) => Promise<Post>;
 }
 
 const PostItem: React.FC<PostItemProps> = ({
@@ -49,6 +51,8 @@ const PostItem: React.FC<PostItemProps> = ({
   toggleLike,
   deletePost,
   createAnswer,
+  onPostUpdated,
+  getPostById,
 }) => {
   const { user } = useAuth();
   const [isAlertOpen, setIsAlertOpen] = useState(false);
@@ -61,6 +65,32 @@ const PostItem: React.FC<PostItemProps> = ({
 
   const handleDeletePost = () => {
     deletePost(post.id);
+  };
+
+  const handleCreateComment = async (
+    postId: string,
+    authorId: string,
+    content: string
+  ) => {
+    createComment(postId, authorId, content);
+    const updatedPost = await getPostById(postId);
+    onPostUpdated(updatedPost);
+  };
+
+  const handleDeleteComment = async (commentId: string) => {
+    deleteComment(commentId);
+    const updatedPost = await getPostById(post.id);
+    onPostUpdated(updatedPost);
+  };
+
+  const handleCreateAnswer = async (
+    commentId: string,
+    authorId: string,
+    content: string
+  ) => {
+    createAnswer(commentId, authorId, content);
+    const updatedPost = await getPostById(post.id);
+    onPostUpdated(updatedPost);
   };
 
   return (
@@ -145,7 +175,7 @@ const PostItem: React.FC<PostItemProps> = ({
           />
         </div>
         <PostActions post={post} users={users} onLike={handleToggleLike} />
-        <div className="mt-3">
+        <div className="mt-3 w-[468px]">
           <p className="text-base">
             <span className="text-base font-semibold">{post.user.name}</span>{" "}
             {post.content}
@@ -159,9 +189,10 @@ const PostItem: React.FC<PostItemProps> = ({
       <PostComments
         post={post}
         users={users}
-        createComment={createComment}
-        deleteComment={deleteComment}
-        createAnswer={createAnswer}
+        createComment={handleCreateComment}
+        deleteComment={handleDeleteComment}
+        createAnswer={handleCreateAnswer}
+        commentCount={post.commentCount || 0}
       />
 
       {isAlertOpen && (

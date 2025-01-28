@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import axiosClient from "../services/axiosClient";
 import { User } from "../types/Users";
 import { Post } from "../types/Posts";
@@ -10,7 +10,7 @@ export const useApi = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const getPosts = async () => {
+  const getPosts = useCallback(async () => {
     try {
       const response = await axiosClient.get("/posts");
       const userResponse = await axiosClient.get("/users");
@@ -23,6 +23,16 @@ export const useApi = () => {
       setError("Error fetching posts - " + (error as Error).message);
     } finally {
       setLoading(false);
+    }
+  }, []);
+
+  const getComments = async (postId: string) => {
+    try {
+      const response = await axiosClient.get(`/comments/post/${postId}`);
+      return response.data;
+    } catch (error: unknown) {
+      setError("Erro ao buscar comentários - " + (error as Error).message);
+      throw error;
     }
   };
 
@@ -38,6 +48,16 @@ export const useApi = () => {
     }
   };
 
+  const getPostById = async (postId: string) => {
+    try {
+      const response = await axiosClient.get(`/posts/${postId}`);
+      return response.data;
+    } catch (error: unknown) {
+      setError("Erro ao buscar post - " + (error as Error).message);
+      throw error;
+    }
+  };
+
   const createComment = async (
     postId: string,
     authorId: string,
@@ -47,76 +67,54 @@ export const useApi = () => {
       const response = await axiosClient.post("/comments", {
         post_id: postId,
         author_id: authorId,
-        content: content,
+        content,
       });
-      const newComment = response.data;
-
-      setPosts((prevPosts) =>
-        prevPosts.map((post) =>
-          post.id === postId
-            ? { ...post, comments: [...post.comments, newComment] }
-            : post
-        )
-      );
+      return response.data;
     } catch (error: unknown) {
       setError("Error creating comment - " + (error as Error).message);
+      throw error;
     }
   };
 
   const deleteComment = async (commentId: string) => {
     try {
       await axiosClient.delete(`/comments/${commentId}`);
-      setPosts((prevPosts) =>
-        prevPosts.map((post) => ({
-          ...post,
-          comments: post.comments.filter((comment) => comment.id !== commentId),
-        }))
-      );
     } catch (error: unknown) {
       setError("Error deleting comment - " + (error as Error).message);
     }
   };
 
+  const getAnswers = async (commentId: string) => {
+    try {
+      const response = await axiosClient.get(`/answers/comment/${commentId}`);
+      return response.data;
+    } catch (error: unknown) {
+      setError("Erro ao buscar respostas - " + (error as Error).message);
+      throw error;
+    }
+  };
+
   const createAnswer = async (
-    commentId: string,
+    content: string,
     authorId: string,
-    content: string
+    commentId: string
   ) => {
     try {
       const response = await axiosClient.post("/answers", {
-        comment_id: commentId,
-        author_id: authorId,
         content: content,
+        author_id: authorId,
+        comment_id: commentId,
       });
-      const newAnswer = response.data;
-
-      setPosts((prevPosts) =>
-        prevPosts.map((post) => ({
-          ...post,
-          comments: post.comments.map((comment) =>
-            comment.id === commentId
-              ? { ...comment, answers: [...comment.answers, newAnswer] }
-              : comment
-          ),
-        }))
-      );
+      return response.data;
     } catch (error: unknown) {
       setError("Error creating answer - " + (error as Error).message);
+      console.log(error);
     }
   };
 
   const deleteAnswer = async (answerId: string) => {
     try {
       await axiosClient.delete(`/answers/${answerId}`);
-      setPosts((prevPosts) =>
-        prevPosts.map((post) => ({
-          ...post,
-          comments: post.comments.map((comment) => ({
-            ...comment,
-            answers: comment.answers.filter((answer) => answer.id !== answerId),
-          })),
-        }))
-      );
     } catch (error: unknown) {
       setError("Error deleting answer - " + (error as Error).message);
     }
@@ -190,20 +188,35 @@ export const useApi = () => {
     }
   };
 
-  const getUserByUsername = async (username: string, addPosts?: boolean) => {
-    try {
-      const response = await axiosClient.get(`/users?username=${username}`);
-      let userData: User = Array.isArray(response.data)
-        ? response.data[0]
-        : response.data;
+  const getUserByUsername = useCallback(
+    async (username: string, addPosts?: boolean) => {
+      try {
+        const response = await axiosClient.get(`/users?username=${username}`);
+        let userData: User = Array.isArray(response.data)
+          ? response.data[0]
+          : response.data;
 
-      if (addPosts) {
-        const postsResponse = await axiosClient.get(
-          `/posts?user_id=${userData.id}`
-        );
-        userData = { ...userData, posts: postsResponse.data };
+        if (addPosts) {
+          const postsResponse = await axiosClient.get(
+            `/posts?user_id=${userData.id}`
+          );
+          userData = { ...userData, posts: postsResponse.data };
+        }
+        return userData;
+      } catch (error: unknown) {
+        setError("Error fetching user - " + (error as Error).message);
+        throw error;
       }
-      return userData;
+    },
+    []
+  );
+
+  const getUserById = async (userId: string) => {
+    try {
+      const response = await axiosClient.post(`/users/getById`, {
+        user_id: userId,
+      });
+      return response.data as User;
     } catch (error: unknown) {
       setError("Error fetching user - " + (error as Error).message);
       throw error;
@@ -256,6 +269,7 @@ export const useApi = () => {
 
   return {
     posts,
+    setPosts, // Adicionei setPosts aqui
     users,
     error,
     loading,
@@ -269,9 +283,13 @@ export const useApi = () => {
     deletePost,
     createPost,
     getUserByUsername,
+    getUserById,
     getFollowers,
     getFollowing,
     followUser,
     unFollowUser,
+    getComments,
+    getAnswers,
+    getPostById,
   };
 };

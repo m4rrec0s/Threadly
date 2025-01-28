@@ -23,11 +23,15 @@ export default function Home() {
       return;
     }
 
-    getUserByUsername(user.username).then((data) => {
+    const fetchUser = async () => {
+      const data = await getUserByUsername(user.username);
       setUserLogged(data);
       setLoading(false);
-    });
-  });
+    };
+
+    fetchUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   useEffect(() => {
     interface ProfileUpdateEvent extends Event {
