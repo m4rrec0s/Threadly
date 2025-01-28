@@ -1,28 +1,27 @@
-import { readData, writeData } from "../utils/databaseManager";
+import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { createToken } from "../utils/jwtManager";
-import { User } from "../types/Users";
+
+const prisma = new PrismaClient();
 
 export default async function loginController(req: any, res: any) {
   const { username, password } = req.body;
 
   if (!username || !password) {
     return res.status(400).json({
-      message: "email and password is required.",
+      message: "username and password are required.",
     });
   }
 
-  const users: User[] = await readData("users");
+  const user = await prisma.user.findUnique({ where: { username } });
 
-  const userExists = users.find((user: User) => user.username === username);
-
-  if (!userExists) {
+  if (!user) {
     return res.status(403).json({
       message: "invalid username or password.",
     });
   }
 
-  const isValidPassword = await bcrypt.compare(password, userExists.password);
+  const isValidPassword = await bcrypt.compare(password, user.password);
 
   if (!isValidPassword) {
     return res.status(403).json({
@@ -30,11 +29,11 @@ export default async function loginController(req: any, res: any) {
     });
   }
 
-  const token = createToken({ id: userExists.id });
+  const token = createToken({ id: user.id });
 
   const loggedUser = {
     token,
-    user: userExists,
+    user,
   };
 
   return res.status(200).json(loggedUser);
