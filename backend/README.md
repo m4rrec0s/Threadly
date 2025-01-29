@@ -4,13 +4,13 @@ Este é o backend do projeto Threadly, uma API RESTful construída com Node.js, 
 
 ## Tecnologias Utilizadas
 
-- **Node.js**: Ambiente de execução JavaScript.
-- **Express**: Framework web para Node.js.
-- **Prisma**: ORM para interagir com o banco de dados.
-- **SQLite**: Banco de dados utilizado.
-- **TypeScript**: Superset de JavaScript que adiciona tipagem estática.
-- **Multer**: Middleware para upload de arquivos.
-- **JWT**: Para autenticação e autorização.
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![Express](https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![Multer](https://img.shields.io/badge/Multer-FF5733?style=for-the-badge&logo=multer&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
 
 ## Instalação
 
@@ -18,7 +18,7 @@ Este é o backend do projeto Threadly, uma API RESTful construída com Node.js, 
 
    ```sh
    git clone https://github.com/m4rrec0s/Threadly.git
-   cd Threadly
+   cd Threadly/backend
    ```
 
 2. Instale as dependências:
