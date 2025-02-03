@@ -8,8 +8,14 @@ import PostSkeleton from "./PostSkeleton";
 import CreatePostForm from "./CreatePostForm";
 import { Button } from "./ui/button";
 import { Post } from "../types/Posts";
+import { useAuth } from "../context/authContext";
+// import { useRouter } from "next/navigation";
 
-const PostsList = () => {
+interface PostsListProps {
+  onPostClick: (postId: string) => void;
+}
+
+const PostsList: React.FC<PostsListProps> = ({ onPostClick }) => {
   const {
     posts,
     users,
@@ -22,11 +28,13 @@ const PostsList = () => {
     createAnswer,
     toggleLike,
     deletePost,
-    setPosts, // Adicionei setPosts aqui
+    setPosts,
   } = useApi();
+  const { user } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newPostCreated, setNewPostCreated] = useState(false);
   const [newPosts, setNewPosts] = useState<Post[]>([]);
+  // const router = useRouter();
 
   useEffect(() => {
     getPosts();
@@ -45,6 +53,22 @@ const PostsList = () => {
     setPosts((prevPosts) =>
       prevPosts.map((post) => (post.id === updatedPost.id ? updatedPost : post))
     );
+  };
+
+  const handleToggleLike = async (postId: string) => {
+    if (!user) return;
+
+    try {
+      toggleLike(postId, user.id);
+      const updatedPost = await getPostById(postId);
+      handlePostUpdated(updatedPost);
+    } catch (err) {
+      console.error("Failed to toggle like", err);
+    }
+  };
+
+  const handlePostClick = (postId: string) => {
+    onPostClick(postId);
   };
 
   if (loading) {
@@ -67,7 +91,7 @@ const PostsList = () => {
   }
 
   return (
-    <div className="">
+    <div className="px-3">
       <CreatePostForm
         onPostCreated={handlePostCreated}
         open={isModalOpen}
@@ -91,18 +115,20 @@ const PostsList = () => {
         ))}
         {posts.length > 0 ? (
           posts.map((post) => (
-            <PostItem
-              key={post.id}
-              post={post}
-              users={users}
-              createComment={createComment}
-              deleteComment={deleteComment}
-              toggleLike={toggleLike}
-              deletePost={deletePost}
-              createAnswer={createAnswer}
-              onPostUpdated={handlePostUpdated}
-              getPostById={getPostById}
-            />
+            <div key={post.id} className="w-full mb-6">
+              <PostItem
+                post={post}
+                users={users}
+                createComment={createComment}
+                deleteComment={deleteComment}
+                toggleLike={handleToggleLike}
+                deletePost={deletePost}
+                createAnswer={createAnswer}
+                onPostUpdated={handlePostUpdated}
+                getPostById={getPostById}
+                openPostModal={handlePostClick}
+              />
+            </div>
           ))
         ) : (
           <h3>Nenhum post adicionado ainda</h3>

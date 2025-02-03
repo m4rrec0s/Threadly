@@ -69,9 +69,6 @@ export class CommentController {
     }
     const comments = await prisma.comment.findMany({
       where: { post_id },
-      include: {
-        answers: true,
-      },
     });
     return res.json(comments);
   }

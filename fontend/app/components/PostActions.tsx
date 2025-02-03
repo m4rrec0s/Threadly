@@ -16,9 +16,15 @@ interface PostActionsProps {
   post: Post;
   users: User[];
   onLike: () => void;
+  openPostModal: (postId: string) => void;
 }
 
-const PostActions: React.FC<PostActionsProps> = ({ post, users, onLike }) => {
+const PostActions: React.FC<PostActionsProps> = ({
+  post,
+  users,
+  onLike,
+  openPostModal,
+}) => {
   const { user } = useAuth();
   const hasLiked = user
     ? post.likes.some((like) => like.user_id === user.id)
@@ -44,6 +50,7 @@ const PostActions: React.FC<PostActionsProps> = ({ post, users, onLike }) => {
         <Button
           variant="link"
           className="hover:text-blue-500 px-0 hover:no-underline"
+          onClick={() => openPostModal(post.id)}
         >
           <MessageCircle className="!w-5 !h-5" />
         </Button>

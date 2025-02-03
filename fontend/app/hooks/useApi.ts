@@ -3,6 +3,7 @@ import axiosClient from "../services/axiosClient";
 import { User } from "../types/Users";
 import { Post } from "../types/Posts";
 import { Follow } from "../types/Follows";
+import axios from "axios";
 
 export const useApi = () => {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -53,7 +54,11 @@ export const useApi = () => {
       const response = await axiosClient.get(`/posts/${postId}`);
       return response.data;
     } catch (error: unknown) {
-      setError("Erro ao buscar post - " + (error as Error).message);
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        setError("Post não encontrado - " + (error as Error).message);
+      } else {
+        setError("Erro ao buscar post - " + (error as Error).message);
+      }
       throw error;
     }
   };
@@ -86,7 +91,9 @@ export const useApi = () => {
 
   const getAnswers = async (commentId: string) => {
     try {
-      const response = await axiosClient.get(`/answers/comment/${commentId}`);
+      const response = await axiosClient.get(
+        `/answers?comment_id=${commentId}`
+      );
       return response.data;
     } catch (error: unknown) {
       setError("Erro ao buscar respostas - " + (error as Error).message);
@@ -213,13 +220,16 @@ export const useApi = () => {
 
   const getUserById = async (userId: string) => {
     try {
-      const response = await axiosClient.post(`/users/getById`, {
-        user_id: userId,
-      });
+      const response = await axiosClient.get(`/users/id/${userId}`);
       return response.data as User;
     } catch (error: unknown) {
-      setError("Error fetching user - " + (error as Error).message);
-      throw error;
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        setError("Usuário não encontrado - " + (error as Error).message);
+        return null;
+      } else {
+        setError("Erro ao buscar usuário - " + (error as Error).message);
+        throw error;
+      }
     }
   };
 
@@ -239,6 +249,16 @@ export const useApi = () => {
       return response.data as Follow[];
     } catch (error: unknown) {
       setError("Error fetching following - " + (error as Error).message);
+      throw error;
+    }
+  };
+
+  const getLikesByPost = async (postId: string) => {
+    try {
+      const response = await axiosClient.get(`/posts/${postId}/likes`);
+      return response.data;
+    } catch (error: unknown) {
+      setError("Erro ao buscar likes - " + (error as Error).message);
       throw error;
     }
   };
@@ -291,5 +311,6 @@ export const useApi = () => {
     getComments,
     getAnswers,
     getPostById,
+    getLikesByPost,
   };
 };

@@ -40,6 +40,21 @@ export class AnswerController {
 
   async index(req: Request, res: Response) {
     const answers = await prisma.answer.findMany();
+    const { author_id, comment_id } = req.query;
+
+    if (author_id) {
+      const answers = await prisma.answer.findMany({
+        where: { author_id: String(author_id) },
+      });
+      return res.json(answers);
+    }
+
+    if (comment_id) {
+      const answers = await prisma.answer.findMany({
+        where: { comment_id: String(comment_id) },
+      });
+      return res.json(answers);
+    }
 
     return res.json(answers);
   }

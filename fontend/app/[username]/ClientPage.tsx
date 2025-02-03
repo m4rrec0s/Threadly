@@ -13,6 +13,7 @@ import ProfilePosts from "./components/ProfilePosts";
 import { Button } from "../components/ui/button";
 import ModalFollowers from "./components/ModalFollowers";
 import ModalFollowing from "./components/ModalFollowing";
+import PostPage from "@/app/p/[post_id]/page";
 
 export default function ClientPage({ username }: { username: string }) {
   const [userF, setUserF] = useState<User>();
@@ -28,6 +29,7 @@ export default function ClientPage({ username }: { username: string }) {
   const [profileImage, setProfileImage] = useState<File | "">("");
   const [currentImage, setCurrentImage] = useState("");
   const [error, setError] = useState("");
+  const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
   const { toast } = useToast();
   const {
     getUserByUsername,
@@ -69,7 +71,32 @@ export default function ClientPage({ username }: { username: string }) {
     };
 
     fetchUserData();
-  }, [username, getUserByUsername, getFollowers, getFollowing, user]);
+  }, []);
+
+  const handlePostClick = (postId: string) => {
+    setSelectedPostId(postId);
+    window.history.pushState(null, "", `/p/${postId}`);
+  };
+
+  // const handleAddFollower = (newFollower: Follow) => {
+  //   setUserF((prevUserF) => {
+  //     if (!prevUserF) return prevUserF;
+  //     return {
+  //       ...prevUserF,
+  //       followers: [...prevUserF.followers, newFollower],
+  //     };
+  //   });
+  // };
+
+  // const handleAddFollowing = (newFollowing: Follow) => {
+  //   setUserF((prevUserF) => {
+  //     if (!prevUserF) return prevUserF;
+  //     return {
+  //       ...prevUserF,
+  //       following: [...prevUserF.following, newFollowing],
+  //     };
+  //   });
+  // };
 
   const handleEditProfile = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -165,8 +192,8 @@ export default function ClientPage({ username }: { username: string }) {
   if (!userF) return <p>Usuário não encontrado</p>;
 
   return (
-    <section className="col-span-1 col-start-2 w-full flex justify-center gap-16 py-6 px-2">
-      <div className="flex flex-col gap-4 w-full py-6 max-w-5xl">
+    <section className="col-span-1 col-start-2 w-full flex justify-center gap-16 py-6 px-2 max-sm:flex-col max-sm:gap-2">
+      <div className="flex flex-col gap-4 w-full py-6 max-w-5xl max-sm:py-3">
         <ProfileHeader
           userF={userF}
           user={user}
@@ -186,7 +213,7 @@ export default function ClientPage({ username }: { username: string }) {
           </div>
         )}
         <div className="w-full border border-white/10"></div>
-        <ProfilePosts posts={userF.posts} />
+        <ProfilePosts posts={userF.posts} onPostClick={handlePostClick} />
       </div>
       {editProfile && (
         <ProfileEditDialog
@@ -215,6 +242,15 @@ export default function ClientPage({ username }: { username: string }) {
         <ModalFollowing
           users={userF.following.map((following) => following.following)}
           setIsModalFollowingOpen={setIsModalFollowingOpen}
+        />
+      )}
+      {selectedPostId && (
+        <PostPage
+          postId={selectedPostId}
+          onClose={() => {
+            setSelectedPostId(null);
+            window.history.pushState(null, "", "/");
+          }}
         />
       )}
     </section>

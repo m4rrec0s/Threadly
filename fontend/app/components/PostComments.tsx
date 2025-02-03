@@ -5,7 +5,6 @@ import { Input } from "./ui/input";
 import { MoreVerticalIcon, SendIcon } from "lucide-react";
 import { User } from "../types/Users";
 import { dateConvert } from "../helpers/dateConvert";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { useState } from "react";
 import { useAuth } from "../context/authContext";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -27,6 +26,8 @@ interface PostCommentsProps {
   deleteComment: (commentId: string) => void;
   createAnswer: (commentId: string, authorId: string, content: string) => void;
   commentCount: number;
+  // showDialog: boolean;
+  // setShowDialog: (open: boolean) => void;
 }
 
 const PostComments: React.FC<PostCommentsProps> = ({
@@ -40,24 +41,26 @@ const PostComments: React.FC<PostCommentsProps> = ({
   const { getComments, getPostById } = useApi();
   const { user } = useAuth();
   const [comments, setComments] = useState<Comment[]>([]);
-  const [showDialog, setShowDialog] = useState(false);
   const [commentContent, setCommentContent] = useState("");
   const [replyTo, setReplyTo] = useState<User | null>(null);
   const [replyCommentId, setReplyCommentId] = useState<string | null>(null);
+  const [loadingComments, setLoadingComments] = useState(false);
 
   const handleOpenComments = async () => {
-    setShowDialog(true);
+    setLoadingComments(true);
     try {
       const fetched = await getComments(post.id);
       setComments(fetched);
     } catch {
       console.error("Erro ao buscar comentários");
+    } finally {
+      setLoadingComments(false);
     }
   };
 
-  const handleCloseDialog = () => {
-    setShowDialog(false);
-  };
+  // const handleCloseDialog = () => {
+  //   setShowDialog(false);
+  // };
 
   const handleReply = (commentId: string, usr: User) => {
     setReplyTo(usr);
@@ -69,9 +72,9 @@ const PostComments: React.FC<PostCommentsProps> = ({
     e.preventDefault();
     if (commentContent.trim() && user) {
       if (replyCommentId) {
-        await createAnswer(commentContent, user.id, replyCommentId);
+        createAnswer(commentContent, user.id, replyCommentId);
       } else {
-        await createComment(post.id, user.id, commentContent);
+        createComment(post.id, user.id, commentContent);
       }
       const updatedComments = await getComments(post.id);
       setComments(updatedComments);
@@ -84,7 +87,7 @@ const PostComments: React.FC<PostCommentsProps> = ({
   };
 
   const handleDeleteComment = async (commentId: string) => {
-    await deleteComment(commentId);
+    deleteComment(commentId);
     const updatedComments = await getComments(post.id);
     setComments(updatedComments);
     const updatedPost = await getPostById(post.id);
@@ -110,11 +113,12 @@ const PostComments: React.FC<PostCommentsProps> = ({
           Ver todos os {commentCount} comentários
         </Button>
       )}
-      <Dialog open={showDialog} onOpenChange={handleCloseDialog}>
-        <DialogContent className="text-sm flex-grow">
-          <DialogHeader className="hidden">
-            <DialogTitle>Comentários</DialogTitle>
-          </DialogHeader>
+      {loadingComments ? (
+        <div className="flex justify-center items-center h-full">
+          <p>Carregando comentários...</p>
+        </div>
+      ) : (
+        <>
           <div>
             <div className="flex items-center space-x-2">
               {post.user &&
@@ -346,8 +350,8 @@ const PostComments: React.FC<PostCommentsProps> = ({
               <SendIcon className="!w-5 !h-5" />
             </Button>
           </form>
-        </DialogContent>
-      </Dialog>
+        </>
+      )}
       <form
         onSubmit={handleCreateComment}
         className="mt-3 flex gap-3 items-center"

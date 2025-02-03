@@ -146,4 +146,23 @@ export class PostController {
 
     return res.json({ message: "Post and associated data deleted." });
   }
+
+  async getUsersWhoLikedPost(req: Request, res: Response) {
+    const { id } = req.params;
+    const likes = await prisma.like.findMany({
+      where: { post_id: String(id) },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            username: true,
+            image: true,
+          },
+        },
+      },
+    });
+    const users = likes.map((like) => like.user);
+    return res.json(users);
+  }
 }

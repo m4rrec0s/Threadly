@@ -9,6 +9,7 @@ import { User } from "./types/Users";
 import { Avatar, AvatarFallback, AvatarImage } from "./components/ui/avatar";
 import Link from "next/link";
 import { Button } from "./components/ui/button";
+import PostPage from "./p/[post_id]/page";
 
 export default function Home() {
   const { user, logout } = useAuth();
@@ -16,6 +17,12 @@ export default function Home() {
   const [userLogged, setUserLogged] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const { getUserByUsername } = useApi();
+  const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
+
+  const handlePostClick = (postId: string) => {
+    setSelectedPostId(postId);
+    window.history.pushState(null, "", `/p/${postId}`);
+  };
 
   useEffect(() => {
     if (!user) {
@@ -57,6 +64,18 @@ export default function Home() {
     };
   }, [user]);
 
+  useEffect(() => {
+    const handlePopState = () => {
+      setSelectedPostId(null);
+    };
+
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
+
   if (!user) {
     return null;
   }
@@ -72,8 +91,8 @@ export default function Home() {
 
   return (
     <div className="flex justify-center w-full gap-16 py-6 px-2">
-      <PostsList />
-      <section className="flex justify-between items-center h-fit w-96 p-6">
+      <PostsList onPostClick={handlePostClick} />
+      <section className="flex justify-between items-center h-fit w-96 p-6 max-sm:hidden">
         <div className="flex items-center gap-2">
           <Link href={`/${userLogged?.username}`}>
             {userLogged?.image !== "" ? (
@@ -113,6 +132,15 @@ export default function Home() {
           Mudar
         </Button>
       </section>
+      {selectedPostId && (
+        <PostPage
+          postId={selectedPostId}
+          onClose={() => {
+            setSelectedPostId(null);
+            window.history.pushState(null, "", "/");
+          }}
+        />
+      )}
     </div>
   );
 }

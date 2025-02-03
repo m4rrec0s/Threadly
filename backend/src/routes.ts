@@ -25,11 +25,16 @@ const upload = multer(uploadsConfig);
 
 router.get("/posts", postController.index);
 router.get("/posts/:id", postController.getPostById);
+router.get("/posts/:id/likes", postController.getUsersWhoLikedPost);
 router.get("/likes", likeController.index);
 router.get("/comments", commentController.index);
 router.get("/comments/post/:post_id", commentController.getByPostId);
 const userController = new UserController();
 router.get("/users", userController.index);
+router.get("/users/username/:username", userController.getByUsername);
+router.get("/users/email/:email", userController.getByEmail);
+router.get("/users/id/:id", userController.getById);
+router.get("/users/created_at/:created_at", userController.getByCreatedAt);
 router.get("/followers/:user_id", followController.getFollowers);
 router.get("/following/:user_id", followController.getFollowing);
 router.get("/answers", answerController.index);

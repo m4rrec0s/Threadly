@@ -21,9 +21,10 @@ import CreatePostForm from "./CreatePostForm";
 
 interface MenuProps {
   user: Pick<User, "id" | "name" | "image" | "username"> | null;
+  horizontal?: boolean;
 }
 
-const Menu = ({ user }: MenuProps) => {
+const Menu = ({ user, horizontal }: MenuProps) => {
   const pathename = usePathname();
   const { logout } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -59,13 +60,35 @@ const Menu = ({ user }: MenuProps) => {
     return null;
   }
   return (
-    <section className="h-screen fixed top-0 left-0 px-3 py-10 border-r border-white/20">
-      <div className="flex flex-col justify-between h-full px-6">
-        <div className="flex flex-col space-y-14">
+    <section
+      className={cn("fixed", {
+        "h-screen top-0 left-0 px-3 py-10 border-r border-white/20":
+          !horizontal,
+        "w-full bottom-0 left-0 h-[8%] border-t border-white/20 flex items-center bg-background z-50":
+          horizontal,
+      })}
+    >
+      <div
+        className={cn("flex", {
+          "flex-col justify-between h-full px-6": !horizontal,
+          "w-full": horizontal,
+        })}
+      >
+        <div
+          className={cn("flex", {
+            "flex-col space-y-14": !horizontal,
+            "w-full": horizontal,
+          })}
+        >
           <Link href={"/"}>
-            <h1 className="text-xl font-extrabold">Threadly</h1>
+            <h1 className="text-xl font-extrabold max-sm:hidden">Threadly</h1>
           </Link>
-          <nav className="flex flex-col gap-8">
+          <nav
+            className={cn("flex", {
+              "flex-col gap-8": !horizontal,
+              "justify-between w-full px-6": horizontal,
+            })}
+          >
             {links.map((link) => {
               const Icon = link.icon;
               const isActive = pathename === link.href;
@@ -79,7 +102,7 @@ const Menu = ({ user }: MenuProps) => {
                   })}
                 >
                   <Icon className="h-8 w-8" />
-                  <span className="text-lg">{link.label}</span>
+                  {!horizontal && <span className="text-lg">{link.label}</span>}
                 </Link>
               );
             })}
@@ -90,7 +113,7 @@ const Menu = ({ user }: MenuProps) => {
               onClick={() => setIsModalOpen(true)}
             >
               <PlusSquare className="!h-8 !w-8" />
-              <span className="!text-lg">Create</span>
+              {!horizontal && <span className="!text-lg">Create</span>}
             </Button>
             <CreatePostForm
               open={isModalOpen}
@@ -133,20 +156,20 @@ const Menu = ({ user }: MenuProps) => {
                   </AvatarFallback>
                 </Avatar>
               )}
-              <span className="text-lg">Profile</span>
+              {!horizontal && <span className="text-lg">Profile</span>}
             </Link>
           </nav>
         </div>
         <div className="">
           <Button
             variant={"link"}
-            className="hover:no-underline text-white font-light opacity-90 flex justify-start items-center px-0 gap-6"
+            className="hover:no-underline text-white font-light opacity-90 flex justify-start items-center px-0 gap-6 max-sm:hidden"
             onClick={logout}
             title="Logout"
           >
             {" "}
             <LogOut className="!h-6 !w-6" />
-            <span className="!text-lg">Logout</span>
+            {!horizontal && <span className="!text-lg">Logout</span>}
           </Button>
         </div>
       </div>

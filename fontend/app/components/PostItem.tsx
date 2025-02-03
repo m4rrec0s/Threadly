@@ -3,7 +3,6 @@
 import { Post } from "../types/Posts";
 import { User } from "../types/Users";
 import PostActions from "./PostActions";
-import PostComments from "./PostComments";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Link from "next/link";
 import Image from "next/image";
@@ -30,6 +29,7 @@ import {
   AlertDialogTitle,
 } from "./ui/alert-dialog";
 import { dateConvert } from "../helpers/dateConvert";
+import { Input } from "./ui/input";
 
 interface PostItemProps {
   post: Post;
@@ -41,25 +41,29 @@ interface PostItemProps {
   deletePost: (postId: string) => void;
   onPostUpdated: (post: Post) => void;
   getPostById: (postId: string) => Promise<Post>;
+  openPostModal: (postId: string) => void;
 }
 
 const PostItem: React.FC<PostItemProps> = ({
   post,
   users,
-  createComment,
-  deleteComment,
+  // createComment,
+  // deleteComment,
   toggleLike,
   deletePost,
-  createAnswer,
+  // createAnswer,
   onPostUpdated,
   getPostById,
+  openPostModal,
 }) => {
   const { user } = useAuth();
   const [isAlertOpen, setIsAlertOpen] = useState(false);
 
-  const handleToggleLike = () => {
+  const handleToggleLike = async () => {
     if (user) {
       toggleLike(post.id, user.id);
+      const updatedPost = await getPostById(post.id);
+      onPostUpdated(updatedPost);
     }
   };
 
@@ -67,31 +71,31 @@ const PostItem: React.FC<PostItemProps> = ({
     deletePost(post.id);
   };
 
-  const handleCreateComment = async (
-    postId: string,
-    authorId: string,
-    content: string
-  ) => {
-    createComment(postId, authorId, content);
-    const updatedPost = await getPostById(postId);
-    onPostUpdated(updatedPost);
-  };
+  // const handleCreateComment = async (
+  //   postId: string,
+  //   authorId: string,
+  //   content: string
+  // ) => {
+  //   createComment(postId, authorId, content);
+  //   const updatedPost = await getPostById(postId);
+  //   onPostUpdated(updatedPost);
+  // };
 
-  const handleDeleteComment = async (commentId: string) => {
-    deleteComment(commentId);
-    const updatedPost = await getPostById(post.id);
-    onPostUpdated(updatedPost);
-  };
+  // const handleDeleteComment = async (commentId: string) => {
+  //   deleteComment(commentId);
+  //   const updatedPost = await getPostById(post.id);
+  //   onPostUpdated(updatedPost);
+  // };
 
-  const handleCreateAnswer = async (
-    commentId: string,
-    authorId: string,
-    content: string
-  ) => {
-    createAnswer(commentId, authorId, content);
-    const updatedPost = await getPostById(post.id);
-    onPostUpdated(updatedPost);
-  };
+  // const handleCreateAnswer = async (
+  //   commentId: string,
+  //   authorId: string,
+  //   content: string
+  // ) => {
+  //   createAnswer(commentId, authorId, content);
+  //   const updatedPost = await getPostById(post.id);
+  //   onPostUpdated(updatedPost);
+  // };
 
   return (
     <div>
@@ -165,18 +169,23 @@ const PostItem: React.FC<PostItemProps> = ({
       </div>
 
       <div className="mt-3">
-        <div className="relative w-[468px] h-[585px]">
+        <div className="relative w-full h-ful max-w-[468px] h-[585px] mx-auto">
           <Image
             src={`http://localhost:8080/uploads/${post.images[0].url}`}
             alt={"post image " + post.id}
             priority
             layout="fill"
-            className="object-cover rounded-lg"
+            className="object-cover rounded-lg aspect-auto"
           />
         </div>
-        <PostActions post={post} users={users} onLike={handleToggleLike} />
-        <div className="mt-3 w-[468px]">
-          <p className="text-base">
+        <PostActions
+          post={post}
+          users={users}
+          onLike={handleToggleLike}
+          openPostModal={() => openPostModal(post.id)}
+        />
+        <div className="mt-2 w-full">
+          <p className="text-base max-w-[468px]">
             <span className="text-base font-semibold">{post.user.name}</span>{" "}
             {post.content}
           </p>
@@ -186,15 +195,32 @@ const PostItem: React.FC<PostItemProps> = ({
         </div>
       </div>
 
-      <PostComments
+      {/* <PostComments
         post={post}
         users={users}
         createComment={handleCreateComment}
         deleteComment={handleDeleteComment}
         createAnswer={handleCreateAnswer}
         commentCount={post.commentCount || 0}
-      />
+      /> */}
 
+      {post.commentCount > 0 && (
+        <div className="mt-2">
+          <Button
+            onClick={() => openPostModal(post.id)}
+            variant={"link"}
+            className="text-gray-500 text-sm px-0 hover:no-underline"
+          >
+            Ver todos os {post.commentCount} comentários
+          </Button>
+        </div>
+      )}
+
+      <div className="mt-2">
+        <Input placeholder="Adicione um comentário" />
+      </div>
+
+      {/* Apagar postagem */}
       {isAlertOpen && (
         <AlertDialog open onOpenChange={() => setIsAlertOpen(false)}>
           <AlertDialogContent>

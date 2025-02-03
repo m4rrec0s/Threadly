@@ -8,11 +8,14 @@ export default function ClientLayout({ children }: { children: ReactNode }) {
   const { user } = useAuth();
 
   return (
-    <div className="grid grid-cols-[18%_80%] w-screen h-screen relative items-stretch">
-      <div className="col-span-1 fixed top-0 left-0 h-full">
+    <div className="w-screen h-screen relative sm:grid sm:grid-cols-[18%_82%] items-stretch flex flex-col">
+      <div className="hidden sm:block">
         <Menu user={user} />
       </div>
-      <div className="col-span-1 col-start-2 w-full">{children}</div>
+      <div className="row-span-1 sm:col-span-1">{children}</div>
+      <div className="block sm:hidden w-full h-fit">
+        <Menu user={user} horizontal />
+      </div>
     </div>
   );
 }
