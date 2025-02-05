@@ -5,7 +5,6 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/app/components/ui/avatar";
-// import { Button } from "@/app/components/ui/button";
 import {
   PostModal,
   PostModalContent,
@@ -13,17 +12,8 @@ import {
   PostModalHeader,
   PostModalTitle,
 } from "@/app/components/ui/postModal";
-// import { Input } from "@/app/components/ui/input";
 import { dateConvert } from "@/app/helpers/dateConvert";
-// import {
-//   DropdownMenu,
-//   DropdownMenuTrigger,
-//   DropdownMenuContent,
-//   DropdownMenuItem,
-// } from "@radix-ui/react-dropdown-menu";
-// import { MoreVerticalIcon, SendIcon } from "lucide-react";
 import Image from "next/image";
-// import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/app/context/authContext";
 import { useApi } from "@/app/hooks/useApi";
@@ -31,7 +21,6 @@ import { Post } from "@/app/types/Posts";
 import { Comment } from "@/app/types/Comments";
 import { Answer } from "@/app/types/Answer";
 import { Button } from "@/app/components/ui/button";
-// import Link from "next/link";
 import { User } from "@/app/types/Users";
 import {
   DropdownMenu,
@@ -241,14 +230,14 @@ export default function PostPage({ postId, onClose }: PostPageProps) {
 
   return (
     <PostModal open onOpenChange={onClose}>
-      <PostModalContent className="w-screen h-[90vh]">
+      <PostModalContent className="w-screen h-[90vh] gap-2">
         <PostModalHeader className="hidden">
           <PostModalTitle>Post {postId}</PostModalTitle>
           <PostModalDescription>{post.content}</PostModalDescription>
         </PostModalHeader>
-        <section className="grid grid-cols-2 gap-4 h-full">
+        <section className="grid grid-cols-2 gap-4 h-full max-sm:grid-cols-1 overflow-hidden">
           {/* post image */}
-          <div className="relative w-full h-full">
+          <div className="relative w-full h-full max-sm:w-full max-sm:h-96">
             <Image
               src={`http://localhost:8080/uploads/${post.images[0].url}`}
               alt={"post image " + post.id}
@@ -257,55 +246,51 @@ export default function PostPage({ postId, onClose }: PostPageProps) {
               className="object-cover rounded-lg"
             />
           </div>
-          {/* post content */}
-          <div className="flex flex-col justify-between h-full overflow-y-auto">
-            {isLoading ? (
-              <div className="flex justify-center items-center h-full">
-                <p>Carregando comentários...</p>
-              </div>
-            ) : (
-              <div className="flex flex-col gap-2">
-                <div>
-                  <div className="flex items-center space-x-2">
-                    {post.user &&
-                      (post.user?.image !== "" ? (
-                        <Avatar>
-                          <AvatarImage
-                            src={`http://localhost:8080/uploads/avatar/${post.user?.image}`}
-                            className="object-cover"
-                          />
-                          <AvatarFallback>
-                            <div className="flex-grow bg-slate-500 animate-pulse"></div>
-                          </AvatarFallback>
-                        </Avatar>
-                      ) : (
-                        <Avatar>
-                          <AvatarImage
-                            src={"/usuario-sem-foto-de-perfil.jpg"}
-                          />
-                          <AvatarFallback>
-                            <div className="flex-grow bg-slate-500 animate-pulse"></div>
-                          </AvatarFallback>
-                        </Avatar>
-                      ))}
-                    <div className="flex flex-col">
-                      <p>
-                        <span className="font-semibold text-base">
-                          {post.user.username}
-                        </span>{" "}
-                        {post.content}
-                      </p>
-                    </div>
-                  </div>
-                  <span className="text-xs text-gray-500">
-                    {dateConvert(post.created_at)}
-                  </span>
+          {/* Post Content - Right Side */}
+          <div className="grid grid-rows-[auto_1fr_auto] h-full overflow-hidden">
+            {/* Post Header */}
+            <div>
+              <div className="flex items-center space-x-2 p-2 border-b">
+                {post.user &&
+                  (post.user?.image !== "" ? (
+                    <Avatar>
+                      <AvatarImage
+                        src={`http://localhost:8080/uploads/avatar/${post.user?.image}`}
+                        className="object-cover"
+                      />
+                      <AvatarFallback>
+                        <div className="flex-grow bg-slate-500 animate-pulse"></div>
+                      </AvatarFallback>
+                    </Avatar>
+                  ) : (
+                    <Avatar>
+                      <AvatarImage src={"/usuario-sem-foto-de-perfil.jpg"} />
+                      <AvatarFallback>
+                        <div className="flex-grow bg-slate-500 animate-pulse"></div>
+                      </AvatarFallback>
+                    </Avatar>
+                  ))}
+                <div className="flex flex-col">
+                  <p>
+                    <span className="font-semibold text-base">
+                      {post.user.username}
+                    </span>{" "}
+                    {post.content}
+                  </p>
                 </div>
+              </div>
+              <span className="text-xs text-gray-500">
+                {dateConvert(post.created_at)}
+              </span>
+            </div>
 
-                <div className="border-b border-gray-600 my-2"></div>
+            {/* <div className="border-b border-gray-600 my-2"></div> */}
 
+            {/* Comments Section - Scrollable */}
+            <div className="overflow-y-auto p-2">
+              <ul className="space-y-2">
                 {comments.map((comment) => (
-                  <div key={comment.id} className="mt-2">
+                  <li key={comment.id} className="mt-2 flex-grow">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         {comment.user && comment.user.image ? (
@@ -373,7 +358,6 @@ export default function PostPage({ postId, onClose }: PostPageProps) {
                         </DropdownMenu>
                       )}
                     </div>
-
                     {answers
                       .filter((answer) => answer.comment_id === comment.id)
                       .map((answer) => (
@@ -449,19 +433,21 @@ export default function PostPage({ postId, onClose }: PostPageProps) {
                           </div>
                         </div>
                       ))}
-                  </div>
+                  </li>
                 ))}
                 {comments.length === 0 && (
-                  <div className="w-full mt-2 text-center">
-                    <h3 className="text-sm text-gray-400">
+                  <li className="w-full mt-2 text-center">
+                    <h3 className="text-sm text-center text-gray-400">
                       Ainda não há nenhum comentário
                     </h3>
-                  </div>
+                  </li>
                 )}
-              </div>
-            )}
-            <div className="mt-3">
-              <div className="border-b border-gray-600 w-full"></div>
+              </ul>
+            </div>
+
+            {/* Fixed Actions and Comment Input */}
+            <div className="flex-none mt-2">
+              <div className="border-t border-gray-600"></div>
               <PostActions
                 onLike={handleToggleLike}
                 openPostModal={() => {}}
@@ -470,7 +456,7 @@ export default function PostPage({ postId, onClose }: PostPageProps) {
               />
               <div className="border-b border-gray-600 w-full"></div>
               <form
-                className="flex gap-3 items-center my-3"
+                className="flex gap-3 items-center py-2"
                 onSubmit={handleCreateComment}
               >
                 <Input

@@ -31,7 +31,7 @@ const PostActions: React.FC<PostActionsProps> = ({
     : false;
 
   return (
-    <div className="flex flex-col mt-1">
+    <div className="flex flex-col mt-0">
       <div className="space-x-4">
         <Button
           variant="link"

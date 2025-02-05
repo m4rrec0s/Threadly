@@ -4,6 +4,7 @@ import { User } from "../types/Users";
 import { Post } from "../types/Posts";
 import { Follow } from "../types/Follows";
 import axios from "axios";
+import { Like } from "../types/Likes";
 
 export const useApi = () => {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -11,9 +12,11 @@ export const useApi = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const getPosts = useCallback(async () => {
+  const getPosts = useCallback(async (page = 1, perPage = 5) => {
     try {
-      const response = await axiosClient.get("/posts");
+      const response = await axiosClient.get(
+        `/posts?_page=${page}&_per_page=${perPage}`
+      );
       const userResponse = await axiosClient.get("/users");
       const usersData = userResponse.data;
       const postsData = response.data;
@@ -129,10 +132,11 @@ export const useApi = () => {
 
   const toggleLike = async (postId: string, userId: string) => {
     try {
-      const post = posts.find((post) => post.id === postId);
-      if (!post) return;
-
-      const hasLiked = post.likes.some((like) => like.user_id === userId);
+      // Buscar post do servidor para verificar se já foi curtido
+      const postFromServer = await getPostById(postId);
+      const hasLiked = postFromServer.likes.some(
+        (like: Like) => like.user_id === userId
+      );
 
       if (hasLiked) {
         await axiosClient.delete("/likes", {
@@ -142,13 +146,13 @@ export const useApi = () => {
           },
         });
         setPosts((prevPosts) =>
-          prevPosts.map((post) =>
-            post.id === postId
+          prevPosts.map((p) =>
+            p.id === postId
               ? {
-                  ...post,
-                  likes: post.likes.filter((like) => like.user_id !== userId),
+                  ...p,
+                  likes: p.likes.filter((like) => like.user_id !== userId),
                 }
-              : post
+              : p
           )
         );
       } else {
@@ -157,12 +161,9 @@ export const useApi = () => {
           user_id: userId,
         });
         const newLike = response.data;
-
         setPosts((prevPosts) =>
-          prevPosts.map((post) =>
-            post.id === postId
-              ? { ...post, likes: [...post.likes, newLike] }
-              : post
+          prevPosts.map((p) =>
+            p.id === postId ? { ...p, likes: [...p.likes, newLike] } : p
           )
         );
       }

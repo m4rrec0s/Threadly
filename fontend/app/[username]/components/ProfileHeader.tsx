@@ -6,6 +6,7 @@ import {
 } from "../../components/ui/avatar";
 import { User } from "../../types/Users";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface ProfileHeaderProps {
   userF: User;
@@ -16,7 +17,6 @@ interface ProfileHeaderProps {
   isFollowed: boolean;
   setIsModalFollowersOpen: (value: boolean) => void;
   setIsModalFollowingOpen: (value: boolean) => void;
-  setEditProfile: (value: boolean) => void;
   handleFollowUser: () => void;
   handleUnFollowUser: () => void;
 }
@@ -28,12 +28,17 @@ export default function ProfileHeader({
   isFollowed,
   setIsModalFollowersOpen,
   setIsModalFollowingOpen,
-  setEditProfile,
   handleFollowUser,
   handleUnFollowUser,
 }: ProfileHeaderProps) {
+  const router = useRouter();
+
+  const handleEditProfileClick = () => {
+    router.push("/account/edit");
+  };
+
   return (
-    <div className="flex gap-6 max-sm:flex-col items-center w-full justify-start mb-6">
+    <div className="flex gap-6 max-sm:flex-col items-center w-full sm:justify-start mb-6">
       <Avatar className="w-[150px] h-[150px] max-sm:w-[100px] max-sm:h-[100px]">
         <AvatarImage
           src={
@@ -82,26 +87,26 @@ export default function ProfileHeader({
         {userF.username === user?.username ? (
           <div className="flex gap-4 mt-4">
             <Button
-              onClick={() => setEditProfile(true)}
-              className="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-900"
+              onClick={handleEditProfileClick}
+              className="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-900 w-fit"
             >
               Editar perfil
             </Button>
-            <Button className="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-900">
+            <Button className="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-900 w-fit">
               Itens Arquivados
             </Button>
           </div>
         ) : !isFollowing ? (
           <Button
             onClick={() => handleFollowUser()}
-            className="mt-4 px-4 py-2 rounded-lg"
+            className="mt-4 px-4 py-2 rounded-lg w-fit"
           >
             {isFollowed ? "Seguir de volta" : "Seguir"}
           </Button>
         ) : (
           <Button
             onClick={() => handleUnFollowUser()}
-            className="mt-4 bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded-lg"
+            className="mt-4 bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded-lg w-fit"
           >
             Deixar de seguir
           </Button>

@@ -1,36 +1,28 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import axiosClient from "@/app/services/axiosClient";
 import { User } from "../types/Users";
 import { useAuth } from "../context/authContext";
-import { useToast } from "../hooks/use-toast";
 import { useApi } from "../hooks/useApi";
 import { Follow } from "../types/Follows";
 import ProfileHeader from "./components/ProfileHeader";
-import ProfileEditDialog from "./components/ProfileEditDialog";
 import ProfilePosts from "./components/ProfilePosts";
 import { Button } from "../components/ui/button";
 import ModalFollowers from "./components/ModalFollowers";
 import ModalFollowing from "./components/ModalFollowing";
 import PostPage from "@/app/p/[post_id]/page";
+import { useRouter } from "next/navigation";
 
 export default function ClientPage({ username }: { username: string }) {
   const [userF, setUserF] = useState<User>();
   const [loading, setLoading] = useState(true);
   const [isFollowing, setIsFollowing] = useState(false);
   const [isFollowed, setIsFollowed] = useState(false);
-  const [editProfile, setEditProfile] = useState(false);
   const [isModalFollowersOpen, setIsModalFollowersOpen] = useState(false);
   const [isModalFollowingOpen, setIsModalFollowingOpen] = useState(false);
-  const { user, updateUser } = useAuth();
-  const [name, setName] = useState("");
-  const [newUsername, setNewUsername] = useState("");
-  const [profileImage, setProfileImage] = useState<File | "">("");
-  const [currentImage, setCurrentImage] = useState("");
+  const { user } = useAuth();
   const [error, setError] = useState("");
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
-  const { toast } = useToast();
   const {
     getUserByUsername,
     getFollowers,
@@ -38,6 +30,11 @@ export default function ClientPage({ username }: { username: string }) {
     followUser,
     unFollowUser,
   } = useApi();
+  const router = useRouter();
+
+  const handleEditProfileClick = () => {
+    router.push("/account/edit");
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -62,7 +59,6 @@ export default function ClientPage({ username }: { username: string }) {
 
           setUserF(userData);
           setLoading(false);
-          setCurrentImage(userData.image);
         }
       } catch (error) {
         setError("Erro ao buscar usuário - " + (error as Error).message);
@@ -78,67 +74,9 @@ export default function ClientPage({ username }: { username: string }) {
     window.history.pushState(null, "", `/p/${postId}`);
   };
 
-  // const handleAddFollower = (newFollower: Follow) => {
-  //   setUserF((prevUserF) => {
-  //     if (!prevUserF) return prevUserF;
-  //     return {
-  //       ...prevUserF,
-  //       followers: [...prevUserF.followers, newFollower],
-  //     };
-  //   });
+  // const handleEditProfile = async (e: React.FormEvent) => {
+  //   // Remover lógica de edição de perfil
   // };
-
-  // const handleAddFollowing = (newFollowing: Follow) => {
-  //   setUserF((prevUserF) => {
-  //     if (!prevUserF) return prevUserF;
-  //     return {
-  //       ...prevUserF,
-  //       following: [...prevUserF.following, newFollowing],
-  //     };
-  //   });
-  // };
-
-  const handleEditProfile = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("username", newUsername);
-    if (profileImage !== "") {
-      formData.append("image", profileImage);
-    } else {
-      formData.append("image", "");
-    }
-
-    try {
-      const response = await axiosClient.put(`/users/${userF?.id}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      const updatedUser = response.data;
-      setEditProfile(false);
-      setUserF((prev) => {
-        if (!prev) return prev;
-        return {
-          ...prev,
-          name: updatedUser.name,
-          username: updatedUser.username,
-          image: updatedUser.image,
-        };
-      });
-      setError("");
-      toast({
-        title: "Perfil atualizado",
-        description: "Seu perfil foi atualizado com sucesso",
-      });
-      window.dispatchEvent(
-        new CustomEvent("profileUpdate", { detail: updatedUser })
-      );
-      updateUser(updatedUser);
-    } catch (error: unknown) {
-      setError("Erro ao editar perfil - " + (error as Error).message);
-    }
-  };
 
   const handleFollowUser = async () => {
     try {
@@ -146,12 +84,13 @@ export default function ClientPage({ username }: { username: string }) {
         setError("Erro ao seguir usuário - IDs inválidos");
         return;
       }
-      const response = await followUser(user.id, userF.id);
+      await followUser(user.id, userF.id);
+      const updatedFollowers = await getFollowers(userF.id);
       setUserF((prev) => {
         if (!prev) return prev;
         return {
           ...prev,
-          followers: response as unknown as Follow[],
+          followers: updatedFollowers as unknown as Follow[],
         };
       });
       setIsFollowing(true);
@@ -167,13 +106,12 @@ export default function ClientPage({ username }: { username: string }) {
         return;
       }
       await unFollowUser(user.id, userF.id);
+      const updatedFollowers = await getFollowers(userF.id);
       setUserF((prev) => {
         if (!prev) return prev;
         return {
           ...prev,
-          followers: prev.followers.filter(
-            (follower) => follower.follower_id !== user.id
-          ),
+          followers: updatedFollowers as unknown as Follow[],
         };
       });
       setIsFollowing(false);
@@ -191,6 +129,8 @@ export default function ClientPage({ username }: { username: string }) {
 
   if (!userF) return <p>Usuário não encontrado</p>;
 
+  if (error) return <p>{error}</p>;
+
   return (
     <section className="col-span-1 col-start-2 w-full flex justify-center gap-16 py-6 px-2 max-sm:flex-col max-sm:gap-2">
       <div className="flex flex-col gap-4 w-full py-6 max-w-5xl max-sm:py-3">
@@ -201,13 +141,12 @@ export default function ClientPage({ username }: { username: string }) {
           isFollowed={isFollowed}
           setIsModalFollowersOpen={setIsModalFollowersOpen}
           setIsModalFollowingOpen={setIsModalFollowingOpen}
-          setEditProfile={setEditProfile}
           handleFollowUser={handleFollowUser}
           handleUnFollowUser={handleUnFollowUser}
         />
         {userF.id === user?.id && userF.image === "" && (
           <div className="w-full flex justify-center">
-            <Button variant={"outline"} onClick={() => setEditProfile(true)}>
+            <Button variant={"outline"} onClick={handleEditProfileClick}>
               Adicione uma foto de perfil
             </Button>
           </div>
@@ -215,21 +154,11 @@ export default function ClientPage({ username }: { username: string }) {
         <div className="w-full border border-white/10"></div>
         <ProfilePosts posts={userF.posts} onPostClick={handlePostClick} />
       </div>
-      {editProfile && (
+      {/* {editProfile && (
         <ProfileEditDialog
-          name={name}
-          setName={setName}
-          newUsername={newUsername}
-          setNewUsername={setNewUsername}
-          profileImage={profileImage}
-          setProfileImage={setProfileImage}
-          handleEditProfile={handleEditProfile}
-          error={error}
-          setEditProfile={setEditProfile}
-          currentImage={currentImage}
-          setCurrentImage={setCurrentImage}
+          // Remover lógica de edição de perfil
         />
-      )}
+      )} */}
 
       {isModalFollowersOpen && (
         <ModalFollowers
