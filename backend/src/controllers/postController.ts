@@ -42,11 +42,15 @@ export class PostController {
   }
 
   async index(req: Request, res: Response) {
-    const { user_id, id } = req.query;
+    const { user_id, id, _page = 1, _per_page = 25 } = req.query;
     const where: any = {};
 
     if (user_id) where.user_id = user_id;
     if (id) where.id = id;
+
+    const page = parseInt(_page as string, 10);
+    const perPage = parseInt(_per_page as string, 10);
+    const skip = (page - 1) * perPage;
 
     const posts = await prisma.post.findMany({
       where,
@@ -59,6 +63,8 @@ export class PostController {
       orderBy: {
         created_at: "desc",
       },
+      skip,
+      take: perPage,
     });
 
     const postsWithCommentCount = await Promise.all(
