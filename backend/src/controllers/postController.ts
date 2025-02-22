@@ -34,7 +34,6 @@ export class PostController {
         images: true,
         user: true,
         likes: true,
-        comments: true,
       },
     });
 

@@ -4,7 +4,7 @@ import path from "path";
 import cors from "cors";
 
 const app = express();
-const port = 8080;
+const port = process.env.PORT || 8080;
 
 app.use(cors({ origin: "http://localhost:3000" }));
 app.use(express.json());

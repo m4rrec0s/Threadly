@@ -169,7 +169,7 @@ const PostItem: React.FC<PostItemProps> = ({
       </div>
 
       <div className="mt-3">
-        <div className="relative w-full h-ful max-w-[468px] h-[585px] mx-auto">
+        <div className="relative w-full h-ful max-sm:min-w-[440px] min-w-[468px] max-w-[468px] h-[585px] mx-auto">
           <Image
             src={`http://localhost:8080/uploads/${post.images[0].url}`}
             alt={"post image " + post.id}
@@ -239,6 +239,8 @@ const PostItem: React.FC<PostItemProps> = ({
           </AlertDialogContent>
         </AlertDialog>
       )}
+
+      <div className="border border-t mt-5 mx-5 border-white/20" />
     </div>
   );
 };

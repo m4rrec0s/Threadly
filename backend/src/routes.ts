@@ -13,6 +13,7 @@ import { CommentController } from "./controllers/commentController";
 import { UserController } from "./controllers/userController";
 import { FollowController } from "./controllers/followController";
 import { AnswerController } from "./controllers/answerController";
+import { FeedController } from "./controllers/feedController";
 
 export const router = Router();
 const postController = new PostController();
@@ -20,6 +21,7 @@ const likeController = new LikeController();
 const commentController = new CommentController();
 const followController = new FollowController();
 const answerController = new AnswerController();
+const feedController = new FeedController();
 
 const upload = multer(uploadsConfig);
 
@@ -38,6 +40,7 @@ router.get("/users/created_at/:created_at", userController.getByCreatedAt);
 router.get("/followers/:user_id", followController.getFollowers);
 router.get("/following/:user_id", followController.getFollowing);
 router.get("/answers", answerController.index);
+router.get("/feed", feedController.getFeed);
 
 router.post("/posts", upload.array("images"), postController.store);
 router.post("/register", uploadAvatar, registerController);

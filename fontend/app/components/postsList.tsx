@@ -9,6 +9,8 @@ import CreatePostForm from "./CreatePostForm";
 import { Button } from "./ui/button";
 import { Post } from "../types/Posts";
 import { useAuth } from "../context/authContext";
+import Suggestions from "./Suggestions";
+import { Suggestion } from "../types/Feed";
 // import { useRouter } from "next/navigation";
 
 interface PostsListProps {
@@ -17,11 +19,11 @@ interface PostsListProps {
 
 const PostsList: React.FC<PostsListProps> = ({ onPostClick }) => {
   const {
-    posts,
+    feed,
     users,
     error,
     loading,
-    getPosts,
+    getFeed,
     getPostById,
     createComment,
     deleteComment,
@@ -37,9 +39,15 @@ const PostsList: React.FC<PostsListProps> = ({ onPostClick }) => {
   // const router = useRouter();
 
   useEffect(() => {
-    getPosts();
+    if (user) {
+      getFeed(user?.id);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  if (!user) {
+    return null;
+  }
 
   const handlePostCreated = (newPost: Post) => {
     setNewPosts((prevPosts) => [newPost, ...prevPosts]);
@@ -101,7 +109,7 @@ const PostsList: React.FC<PostsListProps> = ({ onPostClick }) => {
         <Button
           className="fixed bottom-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-full shadow-lg"
           onClick={() => {
-            getPosts();
+            getFeed(user?.id);
             setNewPosts([]);
             setNewPostCreated(false);
           }}
@@ -109,27 +117,34 @@ const PostsList: React.FC<PostsListProps> = ({ onPostClick }) => {
           Novas publicações
         </Button>
       )}
-      <section className="space-y-6 w-full flex flex-col items-center max-w-3xl mx-auto">
+      <section className="space-y-6 w-full flex flex-col overflow-x-hidden">
         {newPosts.map((post) => (
           <PostSkeleton key={post.id} />
         ))}
-        {posts.length > 0 ? (
-          posts.map((post) => (
-            <div key={post.id} className="w-full mb-6">
-              <PostItem
-                post={post}
-                users={users}
-                createComment={createComment}
-                deleteComment={deleteComment}
-                toggleLike={handleToggleLike}
-                deletePost={deletePost}
-                createAnswer={createAnswer}
-                onPostUpdated={handlePostUpdated}
-                getPostById={getPostById}
-                openPostModal={handlePostClick}
+        {feed.length > 0 ? (
+          feed.map((item, index) =>
+            "suggestions" in item ? (
+              <Suggestions
+                key={index}
+                suggestions={item.suggestions as Suggestion[]}
               />
-            </div>
-          ))
+            ) : (
+              <div key={(item as unknown as Post).id} className="w-full mb-6">
+                <PostItem
+                  post={item as unknown as Post}
+                  users={users}
+                  createComment={createComment}
+                  deleteComment={deleteComment}
+                  toggleLike={handleToggleLike}
+                  deletePost={deletePost}
+                  createAnswer={createAnswer}
+                  onPostUpdated={handlePostUpdated}
+                  getPostById={getPostById}
+                  openPostModal={handlePostClick}
+                />
+              </div>
+            )
+          )
         ) : (
           <h3>Nenhum post adicionado ainda</h3>
         )}

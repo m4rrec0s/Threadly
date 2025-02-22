@@ -5,9 +5,11 @@ import { Post } from "../types/Posts";
 import { Follow } from "../types/Follows";
 import axios from "axios";
 import { Like } from "../types/Likes";
+import { Feed } from "../types/Feed";
 
 export const useApi = () => {
   const [posts, setPosts] = useState<Post[]>([]);
+  const [feed, setFeed] = useState<Feed[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -29,6 +31,23 @@ export const useApi = () => {
       setLoading(false);
     }
   }, []);
+
+  const getFeed = async (userId: string) => {
+    try {
+      const response = await axiosClient.get(`/feed?user_id=${userId}`);
+      const userResponse = await axiosClient.get("/users");
+      const usersData = userResponse.data;
+      const feedData = response.data;
+
+      setFeed(feedData);
+      setUsers(usersData);
+    } catch (error: unknown) {
+      setError("Error fetching feed - " + (error as Error).message);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const getComments = async (postId: string) => {
     try {
@@ -290,11 +309,14 @@ export const useApi = () => {
 
   return {
     posts,
-    setPosts, // Adicionei setPosts aqui
+    feed,
+    setPosts,
+    setFeed,
     users,
     error,
     loading,
     getPosts,
+    getFeed,
     getPostByUser,
     createComment,
     deleteComment,
