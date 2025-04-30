@@ -90,9 +90,9 @@ export default function Home() {
     );
 
   return (
-    <div className="flex justify-center w-full gap-16 py-6 px-2">
+    <div className="flex justify-center w-full gap-16 py-6 md:px-2 overflow-x-hidden">
       <PostsList onPostClick={handlePostClick} />
-      <section className="flex justify-between items-center h-fit w-96 p-6 max-sm:hidden">
+      <section className="flex justify-between items-center h-fit w-full p-6 max-sm:hidden">
         <div className="flex items-center gap-2">
           <Link href={`/${userLogged?.username}`}>
             {userLogged?.image !== "" ? (
