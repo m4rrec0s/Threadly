@@ -47,8 +47,13 @@ const SuggestionItem: React.FC<SuggestionItemProps> = ({
             <div className="flex-grow bg-slate-500 animate-pulse"></div>
           </AvatarFallback>
         </Avatar>
-        <div className="ml-2 w-[100px] text-center">
-          <p className="text-sm font-semibold truncate">{user.username}</p>
+        <div className="text-center">
+          <Link
+            href={`/${user.username}`}
+            className="text-sm font-semibold max-w-[80px] truncate block"
+          >
+            {user.username}
+          </Link>
           <p className="text-xs text-gray-500">{user.name}</p>
         </div>
       </div>
@@ -171,10 +176,10 @@ const Suggestions: React.FC<SuggestionsProps> = ({ suggestions }) => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className="flex flex-col gap-4 w-full sm:max-w-md max-sm:max-w-sm">
+    <div className="max-w-fit mx-auto w-full">
       <h3 className="text-base font-semibold mb-2">Sugestões</h3>
       <div className="p-2 w-full overflow-x-auto">
-        <div className="flex items-center space-x-5">
+        <div className="flex items-center space-x-3">
           {suggestionUsers.map((u) => {
             const isFollowing = myFollowing.some(
               (f) => f.following_id === u.id

@@ -61,32 +61,34 @@ const Menu = ({ user, horizontal }: MenuProps) => {
   }
   return (
     <section
-      className={cn("fixed", {
-        "h-screen top-0 left-0 px-3 py-10 border-r border-white/20":
+      className={cn("fixed z-40", {
+        "h-screen top-0 left-0 w-full max-w-[280px] px-3 py-10 border-r border-white/20 overflow-y-auto":
           !horizontal,
-        "w-full bottom-0 left-0 h-[8%] border-t border-white/20 flex items-center bg-background z-50":
+        "w-full bottom-0 left-0 h-[8%] min-h-[60px] border-t border-white/20 flex items-center bg-background":
           horizontal,
       })}
     >
+      {" "}
       <div
         className={cn("flex", {
-          "flex-col justify-between h-full px-6": !horizontal,
+          "flex-col justify-between h-full px-3 sm:px-6": !horizontal,
           "w-full": horizontal,
         })}
       >
+        {" "}
         <div
           className={cn("flex", {
-            "flex-col space-y-14": !horizontal,
+            "flex-col space-y-8 sm:space-y-14": !horizontal,
             "w-full": horizontal,
           })}
         >
           <Link href={"/"}>
             <h1 className="text-xl font-extrabold max-sm:hidden">Threadly</h1>
-          </Link>
+          </Link>{" "}
           <nav
             className={cn("flex", {
-              "flex-col gap-8": !horizontal,
-              "justify-between w-full px-6": horizontal,
+              "flex-col gap-4 sm:gap-8": !horizontal,
+              "justify-between w-full px-4 sm:px-6": horizontal,
             })}
           >
             {links.map((link) => {
@@ -96,40 +98,50 @@ const Menu = ({ user, horizontal }: MenuProps) => {
                 <Link
                   href={link.href}
                   key={link.href}
-                  className={cn("flex items-center gap-6", {
+                  className={cn("flex items-center gap-3 sm:gap-6", {
                     "font-extrabold opacity-100": isActive,
                     "font-light opacity-90": !isActive,
                   })}
                 >
-                  <Icon className="h-8 w-8" />
-                  {!horizontal && <span className="text-lg">{link.label}</span>}
+                  {" "}
+                  <Icon className="h-6 w-6 sm:h-8 sm:w-8" />
+                  {!horizontal && (
+                    <span className="text-sm sm:text-lg">{link.label}</span>
+                  )}
                 </Link>
               );
-            })}
+            })}{" "}
             <Button
               variant={"link"}
-              className="hover:no-underline text-white font-light opacity-90 flex justify-start items-center px-0 gap-6"
+              className="hover:no-underline text-white font-light opacity-90 flex justify-start items-center px-0 gap-3 sm:gap-6"
               id="create-post"
               onClick={() => setIsModalOpen(true)}
             >
-              <PlusSquare className="!h-8 !w-8" />
-              {!horizontal && <span className="!text-lg">Create</span>}
+              <PlusSquare className="!h-6 !w-6 sm:!h-8 sm:!w-8" />
+              {!horizontal && (
+                <span className="!text-sm sm:!text-lg">Create</span>
+              )}
             </Button>
             <CreatePostForm
               open={isModalOpen}
               onOpenChange={setIsModalOpen}
               onPostCreated={() => setIsModalOpen(false)}
-            />
+            />{" "}
             <Link
               href={`/${user.username}`}
-              className={cn("flex items-center gap-6 transition-colors", {
-                "font-extrabold opacity-100": pathename === `/${user.username}`,
-                "font-light opacity-90": pathename !== `/${user.username}`,
-              })}
+              className={cn(
+                "flex items-center gap-3 sm:gap-6 transition-colors",
+                {
+                  "font-extrabold opacity-100":
+                    pathename === `/${user.username}`,
+                  "font-light opacity-90": pathename !== `/${user.username}`,
+                }
+              )}
             >
+              {" "}
               {user.image !== "" ? (
                 <Avatar
-                  className={cn("h-8 w-8", {
+                  className={cn("h-6 w-6 sm:h-8 sm:w-8", {
                     "border-2 border-white": pathename === `/${user.username}`,
                   })}
                 >
@@ -143,7 +155,7 @@ const Menu = ({ user, horizontal }: MenuProps) => {
                 </Avatar>
               ) : (
                 <Avatar
-                  className={cn("h-8 w-8", {
+                  className={cn("h-6 w-6 sm:h-8 sm:w-8", {
                     "border-2 border-white": pathename === `/${user.username}`,
                   })}
                 >
@@ -156,20 +168,25 @@ const Menu = ({ user, horizontal }: MenuProps) => {
                   </AvatarFallback>
                 </Avatar>
               )}
-              {!horizontal && <span className="text-lg">Profile</span>}
+              {!horizontal && (
+                <span className="text-sm sm:text-lg">Profile</span>
+              )}
             </Link>
           </nav>
         </div>
         <div className="">
+          {" "}
           <Button
             variant={"link"}
-            className="hover:no-underline text-white font-light opacity-90 flex justify-start items-center px-0 gap-6 max-sm:hidden"
+            className="hover:no-underline text-white font-light opacity-90 flex justify-start items-center px-0 gap-3 sm:gap-6 max-sm:hidden"
             onClick={logout}
             title="Logout"
           >
             {" "}
-            <LogOut className="!h-6 !w-6" />
-            {!horizontal && <span className="!text-lg">Logout</span>}
+            <LogOut className="!h-5 !w-5 sm:!h-6 sm:!w-6" />
+            {!horizontal && (
+              <span className="!text-sm sm:!text-lg">Logout</span>
+            )}
           </Button>
         </div>
       </div>

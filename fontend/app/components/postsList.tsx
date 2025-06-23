@@ -78,28 +78,31 @@ const PostsList: React.FC<PostsListProps> = ({ onPostClick }) => {
   const handlePostClick = (postId: string) => {
     onPostClick(postId);
   };
-
   if (loading) {
     return (
-      <section className="flex-grow">
+      <section className="flex-grow w-full max-w-full">
         <PostSkeleton />
       </section>
     );
   }
-
   if (error) {
     return (
-      <section className="flex-grow flex items-center justify-center">
-        <div className="flex flex-col items-center space-y-4">
-          <Image src="/sadCloud.svg" alt="error" width={200} height={170} />
-          <h3>Ocorreu um erro: {error}</h3>
+      <section className="flex-grow flex items-center justify-center w-full max-w-full p-4">
+        <div className="flex flex-col items-center space-y-4 text-center">
+          <Image
+            src="/sadCloud.svg"
+            alt="error"
+            width={200}
+            height={170}
+            className="max-w-full h-auto"
+          />
+          <h3 className="text-sm sm:text-base">Ocorreu um erro: {error}</h3>
         </div>
       </section>
     );
   }
-
   return (
-    <div className="px-3">
+    <div className="w-full max-w-full overflow-x-hidden">
       <CreatePostForm
         onPostCreated={handlePostCreated}
         open={isModalOpen}
@@ -107,7 +110,7 @@ const PostsList: React.FC<PostsListProps> = ({ onPostClick }) => {
       />
       {newPostCreated && (
         <Button
-          className="fixed bottom-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-full shadow-lg"
+          className="fixed bottom-16 sm:bottom-4 right-4 bg-blue-500 text-white px-3 sm:px-4 py-2 rounded-full shadow-lg text-sm sm:text-base z-30"
           onClick={() => {
             getFeed(user?.id);
             setNewPosts([]);
@@ -117,7 +120,7 @@ const PostsList: React.FC<PostsListProps> = ({ onPostClick }) => {
           Novas publicações
         </Button>
       )}
-      <section className="space-y-6 w-full flex flex-col overflow-x-hidden">
+      <section className="space-y-4 sm:space-y-6 w-full flex flex-col overflow-x-hidden px-2 sm:px-0">
         {newPosts.map((post) => (
           <PostSkeleton key={post.id} />
         ))}
@@ -129,7 +132,10 @@ const PostsList: React.FC<PostsListProps> = ({ onPostClick }) => {
                 suggestions={item.suggestions as Suggestion[]}
               />
             ) : (
-              <div key={(item as unknown as Post).id} className="w-full mb-6">
+              <div
+                key={(item as unknown as Post).id}
+                className="w-full mb-4 sm:mb-6 max-w-full"
+              >
                 <PostItem
                   post={item as unknown as Post}
                   users={users}
@@ -146,7 +152,9 @@ const PostsList: React.FC<PostsListProps> = ({ onPostClick }) => {
             )
           )
         ) : (
-          <h3>Nenhum post adicionado ainda</h3>
+          <h3 className="text-center text-sm sm:text-base p-4">
+            Nenhum post adicionado ainda
+          </h3>
         )}
       </section>
     </div>

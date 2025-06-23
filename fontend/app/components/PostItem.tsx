@@ -98,7 +98,7 @@ const PostItem: React.FC<PostItemProps> = ({
   // };
 
   return (
-    <div>
+    <div className="max-w-fit mx-auto">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Link href={`/${post.user.username}`}>
@@ -169,7 +169,7 @@ const PostItem: React.FC<PostItemProps> = ({
       </div>
 
       <div className="mt-3">
-        <div className="relative w-full h-ful max-sm:min-w-[440px] min-w-[468px] max-w-[468px] h-[585px] mx-auto">
+        <div className="relative w-full h-ful max-sm:w-full min-w-[468px] max-w-[468px] h-[585px] mx-auto">
           <Image
             src={`http://localhost:8080/uploads/${post.images[0].url}`}
             alt={"post image " + post.id}
